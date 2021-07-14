@@ -1,4 +1,4 @@
-const debug = require("debug")("codeCat:bd:controladores:usuarioController");
+const debug = require("debug")("codeCatAPI:bd:controladores:usuarioController");
 const chalk = require("chalk");
 const Usuario = require("../modelos/UsuarioSchema");
 
