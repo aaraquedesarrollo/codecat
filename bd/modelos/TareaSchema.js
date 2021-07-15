@@ -11,7 +11,7 @@ const recompensaSchema = new Schema({
   },
 });
 
-const objetivosSchema = new Schema({
+const objetivoSchema = new Schema({
   objetivo: {
     type: String,
     required: true,
@@ -37,7 +37,7 @@ const TareaSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  objetivos: [objetivosSchema],
+  objetivos: [objetivoSchema],
 });
 
 const Tarea = model("Tarea", TareaSchema, "tarea");
