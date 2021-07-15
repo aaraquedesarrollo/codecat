@@ -7,8 +7,10 @@ const listarTrabajos = async () => {
     const listadoTrabajos = await Trabajo.find();
     return listadoTrabajos;
   } catch (err) {
-    debug(chalk.redBright.bold("No se ha podido listar los trabajos"));
-    debug(chalk.redBright.bold(err.message));
+    const nuevoError = new Error(
+      "No se ha podido obtener el listado de trabajos"
+    );
+    throw err.codigo ? err : nuevoError;
   }
 };
 
@@ -17,9 +19,7 @@ const obtenerTrabajo = async (idTrabajo) => {
     const trabajoObtenido = await Trabajo.findById(idTrabajo);
     return trabajoObtenido;
   } catch (err) {
-    const nuevoError = new Error(
-      "No se ha podido obtener el listado de trabajos"
-    );
+    const nuevoError = new Error("No se ha podido obtener el trabajo");
     throw err.codigo ? err : nuevoError;
   }
 };
