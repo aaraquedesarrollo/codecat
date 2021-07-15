@@ -15,6 +15,10 @@ const TrabajoSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  salario: {
+    type: Number,
+    required: true,
+  },
 });
 
 const Trabajo = model("Trabajo", TrabajoSchema, "trabajo");
