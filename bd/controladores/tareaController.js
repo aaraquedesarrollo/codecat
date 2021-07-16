@@ -7,16 +7,13 @@ const Tarea = require("../modelos/TareaSchema");
 const listarTareas = async () => {
   try {
     const tareasListadas = await Tarea.find();
-    if (!tareasListadas) {
-      throw crearError("No existen tareas", 404);
-    }
     return tareasListadas;
   } catch (err) {
     debug(chalk.redBright.bold("No se han podido listar las tareas"));
     const nuevoError = crearError(
       `No se han podido listar las tareas ${err.message}`
     );
-    throw err.codigo ? err : nuevoError;
+    throw nuevoError;
   }
 };
 

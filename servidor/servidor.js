@@ -5,6 +5,7 @@ const app = require("./init");
 const rutasTrabajo = require("./rutas/trabajo");
 const rutasUsuario = require("./rutas/usuario");
 const rutasTarea = require("./rutas/tarea");
+const rutasNivel = require("./rutas/nivel");
 
 const { errorGeneral, error404 } = require("./errores");
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use("/trabajos", rutasTrabajo);
 app.use("/usuarios", rutasUsuario);
 app.use("/tareas", rutasTarea);
+app.use("/niveles", rutasNivel);
 
 // errores
 app.use(error404);
