@@ -22,7 +22,9 @@ const errorGeneral = (err, req, res, next) => {
 
 const crearError = (mensaje, codigoError) => {
   const error = new Error(mensaje);
-  error.codigo = codigoError;
+  if (codigoError) {
+    error.codigo = codigoError;
+  }
   return error;
 };
 
