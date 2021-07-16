@@ -23,16 +23,17 @@ const listarTareas = async () => {
 const obtenerTarea = async (idTarea) => {
   try {
     const tareaObtenida = await Tarea.findById(idTarea);
+    console.log(tareaObtenida);
     if (!tareaObtenida) {
       throw crearError("No existen la tarea", 404);
     }
     return tareaObtenida;
   } catch (err) {
-    debug(chalk.redBright.bold("No se han podido listar la tarea"));
+    debug(chalk.redBright.bold("No se ha podido obtener la tarea"));
     const nuevoError = crearError(
-      `No se han podido listar la tarea ${err.message}`
+      `No se ha podido obtener la tarea ${err.message}`
     );
-    throw nuevoError;
+    throw err.codigo ? err : nuevoError;
   }
 };
 

@@ -1,15 +1,21 @@
+const debug = require("debug")("codeCatAPI:bd:controladores:tareaController");
+const chalk = require("chalk");
 const { crearError } = require("../../servidor/errores");
 const Trabajo = require("../modelos/TrabajoSchema");
 
 const listarTrabajos = async () => {
   try {
     const listadoTrabajos = await Trabajo.find().populate("tareas");
+    if (!listadoTrabajos) {
+      throw crearError("No existen trabajos", 404);
+    }
     return listadoTrabajos;
   } catch (err) {
+    debug(chalk.redBright.bold("No se han podido listar los trabajos"));
     const nuevoError = crearError(
-      `No se ha podido obtener el listado de trabajos: ${err.message}`
+      `No se han podido listar los trabajos ${err.message}`
     );
-    throw nuevoError;
+    throw err.codigo ? err : nuevoError;
   }
 };
 
@@ -18,10 +24,16 @@ const obtenerTrabajo = async (idTrabajo) => {
     const trabajoObtenido = await Trabajo.findById(idTrabajo).populate(
       "tareas"
     );
+    if (!trabajoObtenido) {
+      throw crearError("No existe el trabajo", 404);
+    }
     return trabajoObtenido;
   } catch (err) {
-    const nuevoError = crearError("No se ha podido obtener el trabajo");
-    throw nuevoError;
+    debug(chalk.redBright.bold("No se ha podido obtener el trabajo"));
+    const nuevoError = crearError(
+      `No se ha podido obtener el trabajo ${err.message}`
+    );
+    throw err.codigo ? err : nuevoError;
   }
 };
 
@@ -30,7 +42,10 @@ const crearTrabajo = async (trabajo) => {
     const trabajoCreado = await Trabajo.create(trabajo);
     return trabajoCreado;
   } catch (err) {
-    const nuevoError = crearError("No se ha podido crear el  trabajo");
+    debug(chalk.redBright.bold("No se ha podido crear el trabajo"));
+    const nuevoError = crearError(
+      `No se ha podido crear el trabajo ${err.message}`
+    );
     throw nuevoError;
   }
 };
@@ -41,20 +56,32 @@ const modificarTrabajo = async (idTrabajo, modificaciones) => {
       idTrabajo,
       modificaciones
     );
+    if (!trabajoModificado) {
+      throw crearError("No existe el trabajo a modificar", 404);
+    }
     return trabajoModificado;
   } catch (err) {
-    const nuevoError = crearError("No se ha podido modificar el  trabajo");
-    throw nuevoError;
+    debug(chalk.redBright.bold("No se ha podido modificar el trabajo"));
+    const nuevoError = crearError(
+      `No se ha podido modificar el trabajo ${err.message}`
+    );
+    throw err.codigo ? err : nuevoError;
   }
 };
 
 const eliminarTrabajo = async (idTrabajo) => {
   try {
     const trabajoEliminado = await Trabajo.findByIdAndDelete(idTrabajo);
+    if (!trabajoEliminado) {
+      throw crearError("No existe el trabajo a eliminar", 404);
+    }
     return trabajoEliminado;
   } catch (err) {
-    const nuevoError = crearError("No se ha podido eliminar el  trabajo");
-    throw nuevoError;
+    debug(chalk.redBright.bold("No se ha podido eliminar el trabajo"));
+    const nuevoError = crearError(
+      `No se ha podido eliminar el trabajo ${err.message}`
+    );
+    throw err.codigo ? err : nuevoError;
   }
 };
 
