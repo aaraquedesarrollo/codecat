@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const { crearError } = require("./errores");
 
@@ -26,5 +27,15 @@ const authMiddleware = (req, res, next) => {
     next(e);
   }
 };
+const validarErrores = (req, res, next) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    console.log(errores);
+    const nuevoError = new Error(errores.array().map((error) => error.msg));
+    nuevoError.codigo = 400;
+    return next(nuevoError);
+  }
+  next();
+};
 
-module.exports = { authMiddleware };
+module.exports = { authMiddleware, validarErrores };
