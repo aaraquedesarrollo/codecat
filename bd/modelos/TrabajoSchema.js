@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const Tarea = require("./TareaSchema");
 
 const TrabajoSchema = new Schema({
   nombre: {
