@@ -10,7 +10,7 @@ const listarTrabajos = async () => {
       "No se ha podido obtener el listado de trabajos",
       404
     );
-    throw err.code ? err : nuevoError;
+    throw nuevoError;
   }
 };
 
@@ -20,7 +20,7 @@ const obtenerTrabajo = async (idTrabajo) => {
     return trabajoObtenido;
   } catch (err) {
     const nuevoError = crearError("No se ha podido obtener el trabajo", 404);
-    throw err.code ? err : nuevoError;
+    throw nuevoError;
   }
 };
 
@@ -30,7 +30,7 @@ const crearTrabajo = async (trabajo) => {
     return trabajoCreado;
   } catch (err) {
     const nuevoError = crearError("No se ha podido crear el  trabajo", 409);
-    throw err.codigo ? err : nuevoError;
+    throw nuevoError;
   }
 };
 
@@ -43,7 +43,7 @@ const modificarTrabajo = async (idTrabajo, modificaciones) => {
     return trabajoModificado;
   } catch (err) {
     const nuevoError = crearError("No se ha podido modificar el  trabajo", 409);
-    throw err.codigo ? err : nuevoError;
+    throw nuevoError;
   }
 };
 
@@ -53,7 +53,7 @@ const eliminarTrabajo = async (idTrabajo) => {
     return trabajoEliminado;
   } catch (err) {
     const nuevoError = crearError("No se ha podido eliminar el  trabajo", 409);
-    throw err.codigo ? err : nuevoError;
+    throw nuevoError;
   }
 };
 
