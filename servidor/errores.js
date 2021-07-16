@@ -14,7 +14,7 @@ const error404 = (req, res, next) => {
 };
 
 const errorGeneral = (err, req, res, next) => {
-  const codigo = err.codigo || 500;
+  const { codigo } = err; /* || 500 */
   const mensaje = err.codigo ? err.message : "Ha habido un error general";
   debug(chalk.redBright.bold(err.message));
   res.status(codigo).json({ error: true, mensaje });
@@ -24,6 +24,8 @@ const crearError = (mensaje, codigoError) => {
   const error = new Error(mensaje);
   if (codigoError) {
     error.codigo = codigoError;
+  } else {
+    error.codigo = 500;
   }
   return error;
 };
