@@ -7,8 +7,7 @@ const listarTrabajos = async () => {
     return listadoTrabajos;
   } catch (err) {
     const nuevoError = crearError(
-      "No se ha podido obtener el listado de trabajos",
-      404
+      "No se ha podido obtener el listado de trabajos"
     );
     throw nuevoError;
   }
@@ -19,7 +18,7 @@ const obtenerTrabajo = async (idTrabajo) => {
     const trabajoObtenido = await Trabajo.findById(idTrabajo);
     return trabajoObtenido;
   } catch (err) {
-    const nuevoError = crearError("No se ha podido obtener el trabajo", 404);
+    const nuevoError = crearError("No se ha podido obtener el trabajo");
     throw nuevoError;
   }
 };
@@ -29,7 +28,7 @@ const crearTrabajo = async (trabajo) => {
     const trabajoCreado = await Trabajo.create(trabajo);
     return trabajoCreado;
   } catch (err) {
-    const nuevoError = crearError("No se ha podido crear el  trabajo", 409);
+    const nuevoError = crearError("No se ha podido crear el  trabajo");
     throw nuevoError;
   }
 };
@@ -42,7 +41,7 @@ const modificarTrabajo = async (idTrabajo, modificaciones) => {
     );
     return trabajoModificado;
   } catch (err) {
-    const nuevoError = crearError("No se ha podido modificar el  trabajo", 409);
+    const nuevoError = crearError("No se ha podido modificar el  trabajo");
     throw nuevoError;
   }
 };
@@ -52,7 +51,7 @@ const eliminarTrabajo = async (idTrabajo) => {
     const trabajoEliminado = await Trabajo.findByIdAndDelete(idTrabajo);
     return trabajoEliminado;
   } catch (err) {
-    const nuevoError = crearError("No se ha podido eliminar el  trabajo", 409);
+    const nuevoError = crearError("No se ha podido eliminar el  trabajo");
     throw nuevoError;
   }
 };
