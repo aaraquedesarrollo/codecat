@@ -1,18 +1,18 @@
 const express = require("express");
 const {
-  crearTrabajo,
-  eliminarTrabajo,
-  listarTrabajos,
-  modificarTrabajo,
-  obtenerTrabajo,
-} = require("../../bd/controladores/trabajoController");
+  crearTarea,
+  eliminarTarea,
+  listarTareas,
+  modificarTarea,
+  obtenerTarea,
+} = require("../../bd/controladores/tareaController");
 
 const router = express.Router();
 
 router.get("/listado", async (req, res, next) => {
   try {
-    const trabajos = await listarTrabajos();
-    res.json(trabajos);
+    const tareas = await listarTareas();
+    res.json(tareas);
   } catch (err) {
     next(err);
   }
@@ -20,11 +20,10 @@ router.get("/listado", async (req, res, next) => {
 router.get("/listado/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
-    const trabajo = await obtenerTrabajo(id);
-    res.json(trabajo);
+    const tarea = await obtenerTarea(id);
+    res.json(tarea);
   } catch (err) {
     next(err);
   }
 });
-
 module.exports = router;

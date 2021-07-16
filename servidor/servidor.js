@@ -3,6 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const app = require("./init");
 const rutasTrabajo = require("./rutas/trabajo");
+const rutasTarea = require("./rutas/tarea");
+
 const { errorGeneral, error404 } = require("./errores");
 
 app.use(morganFreeman("dev"));
@@ -11,6 +13,7 @@ app.use(express.json());
 
 // rutas
 app.use("/trabajos", rutasTrabajo);
+app.use("/tareas", rutasTarea);
 
 // errores
 app.use(error404);
