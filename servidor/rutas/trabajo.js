@@ -10,8 +10,12 @@ const {
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
-  const trabajos = await listarTrabajos();
-  res.json(trabajos);
+  try {
+    const trabajos = await listarTrabajos();
+    res.json(trabajos);
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;

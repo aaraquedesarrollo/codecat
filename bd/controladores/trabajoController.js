@@ -3,11 +3,11 @@ const Trabajo = require("../modelos/TrabajoSchema");
 
 const listarTrabajos = async () => {
   try {
-    const listadoTrabajos = await Trabajo.find();
+    const listadoTrabajos = await Trabajo.find().populate("tareas");
     return listadoTrabajos;
   } catch (err) {
     const nuevoError = crearError(
-      "No se ha podido obtener el listado de trabajos"
+      `No se ha podido obtener el listado de trabajos: ${err.message}`
     );
     throw nuevoError;
   }
@@ -15,7 +15,9 @@ const listarTrabajos = async () => {
 
 const obtenerTrabajo = async (idTrabajo) => {
   try {
-    const trabajoObtenido = await Trabajo.findById(idTrabajo);
+    const trabajoObtenido = await Trabajo.findById(idTrabajo).populate(
+      "tareas"
+    );
     return trabajoObtenido;
   } catch (err) {
     const nuevoError = crearError("No se ha podido obtener el trabajo");
