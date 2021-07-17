@@ -21,6 +21,11 @@ const UsuarioSchema = new Schema({
   },
   chuches: Number,
   experiencia: Number,
+  activo: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   trabajo: Schema.Types.ObjectId,
   gato: Schema.Types.ObjectId,
 });

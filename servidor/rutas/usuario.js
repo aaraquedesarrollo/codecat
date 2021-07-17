@@ -4,7 +4,9 @@ const jwt = require("jsonwebtoken");
 const {
   crearUsuario,
   loginUsuario,
+  confirmarHash,
 } = require("../../bd/controladores/usuarioController");
+const { enviarCorreoValidacion } = require("../nodemailer/email");
 
 const router = express.Router();
 
@@ -26,6 +28,16 @@ router.post("/login", async (req, res, next) => {
       expiresIn: "1d",
     });
     res.json({ token });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/confirmar-email/:hashUsuario", async (req, res, next) => {
+  try {
+    const { hashUsuario } = req.params;
+    await confirmarHash(hashUsuario);
+    res.redirect(process.env.URL_FRONT);
   } catch (err) {
     next(err);
   }
