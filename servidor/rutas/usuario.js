@@ -5,6 +5,7 @@ const {
   crearUsuario,
   loginUsuario,
   confirmarHash,
+  modificarUsuario,
 } = require("../../bd/controladores/usuarioController");
 const { enviarCorreoValidacion } = require("../nodemailer/email");
 
@@ -38,6 +39,16 @@ router.get("/confirmar-email/:hashUsuario", async (req, res, next) => {
     const { hashUsuario } = req.params;
     await confirmarHash(hashUsuario);
     res.redirect(process.env.URL_FRONT);
+  } catch (err) {
+    next(err);
+  }
+});
+router.put("/modificar-usuario/:id", async (req, res, next) => {
+  const { id } = req.params;
+  const modificaciones = req.body;
+  try {
+    const usuarioModificado = await modificarUsuario(id, modificaciones);
+    res.json(usuarioModificado);
   } catch (err) {
     next(err);
   }
