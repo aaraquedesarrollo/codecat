@@ -7,11 +7,11 @@ const {
   modificarTarea,
   obtenerTarea,
 } = require("../../bd/controladores/tareaController");
-const { validarErrores } = require("../middlewares");
+const { validarErrores, authMiddleware } = require("../middlewares");
 
 const router = express.Router();
 
-router.get("/listado", async (req, res, next) => {
+router.get("/listado", authMiddleware, async (req, res, next) => {
   try {
     const tareas = await listarTareas();
     res.json(tareas);
@@ -24,7 +24,7 @@ router.get(
   check("id", "La id es incorrecta").isMongoId(),
   validarErrores,
   async (req, res, next) => {
-    const { id } = req.params;
+    const id = req.idUsuario;
     try {
       const tarea = await obtenerTarea(id);
       res.json(tarea);
