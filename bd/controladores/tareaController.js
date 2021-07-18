@@ -3,6 +3,7 @@ const chalk = require("chalk");
 const { crearError } = require("../../servidor/errores");
 
 const Tarea = require("../modelos/TareaSchema");
+const Usuario = require("../modelos/UsuarioSchema");
 
 const listarTareas = async () => {
   try {
@@ -17,9 +18,11 @@ const listarTareas = async () => {
   }
 };
 
-const obtenerTarea = async (idTarea) => {
+const obtenerTarea = async (idTarea, idUsuario) => {
   try {
     const tareaObtenida = await Tarea.findById(idTarea);
+    const usuario = await Usuario.findById(idUsuario);
+
     console.log(tareaObtenida);
     if (!tareaObtenida) {
       throw crearError("No existen la tarea", 404);
