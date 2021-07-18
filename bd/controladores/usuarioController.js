@@ -39,16 +39,20 @@ const crearUsuario = async (usuario) => {
       password: passwordEncriptada,
     });
     const hashUsuario = await generarHash(usuarioCreado._id);
-    enviarCorreoValidacion(usuarioCreado.email, hashUsuario.hash);
+    await enviarCorreoValidacion(usuarioCreado.email, hashUsuario.hash);
     return usuarioCreado;
   } catch (err) {
-    if (usuarioCreado) {
-      await eliminarUsuario(usuarioCreado._id);
+    let nuevoError;
+    if (err.message.includes("username")) {
+      nuevoError = crearError("El nombre de usuario ya existe", 403);
+    } else if (err.message.includes("email")) {
+      nuevoError = crearError("El email usado ya existe", 403);
+    } else {
+      nuevoError = crearError(
+        `No se ha podido crear el usuario: ${err.message}`
+      );
     }
     debug(chalk.redBright.bold("No se ha podido crear el usuario"));
-    const nuevoError = crearError(
-      `No se ha podido crear el usuario: ${err.message}`
-    );
     throw err.codigo ? err : nuevoError;
   }
 };
@@ -78,6 +82,9 @@ const loginUsuario = async (username, password) => {
     );
     if (!contrasenyaCoincide) {
       throw crearError("Credenciales incorrectas", 400);
+    }
+    if (!usuarioEncontrado.activo) {
+      throw crearError("El usuario no esta verificado", 403);
     }
     return usuarioEncontrado._id;
   } catch (err) {
