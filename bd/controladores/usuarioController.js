@@ -8,6 +8,7 @@ const {
   enviarCorreoNuevaContrasenya,
 } = require("../../servidor/nodemailer/email");
 const { generarHash, obtenerHash, borrarHash } = require("./hashController");
+const { eliminarTarea } = require("./tareaController");
 
 const obtenerUsuario = async (idUsuario) => {
   try {

@@ -11,17 +11,16 @@ const { validarErrores, authMiddleware } = require("../middlewares");
 
 const router = express.Router();
 
-router.get("/listado-trabajos", authMiddleware, async (req, res, next) => {
-  const id = req.idUsuario;
+router.get("/listado", authMiddleware, async (req, res, next) => {
   try {
-    const trabajos = await listarTrabajos(id);
+    const trabajos = await listarTrabajos();
     res.json(trabajos);
   } catch (err) {
     next(err);
   }
 });
 
-router.get("/listado-formaciones", async (req, res, next) => {
+router.get("/listado-formaciones", authMiddleware, async (req, res, next) => {
   try {
     const listaFormaciones = await listarFormaciones();
     res.json(listaFormaciones);
