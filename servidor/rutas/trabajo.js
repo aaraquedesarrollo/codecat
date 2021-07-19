@@ -20,7 +20,7 @@ router.get("/listado", authMiddleware, async (req, res, next) => {
   }
 });
 
-router.get("/listado-formaciones", async (req, res, next) => {
+router.get("/listado-formaciones", authMiddleware, async (req, res, next) => {
   try {
     const listaFormaciones = await listarFormaciones();
     res.json(listaFormaciones);
