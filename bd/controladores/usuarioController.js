@@ -5,6 +5,7 @@ const { crearError } = require("../../servidor/errores");
 const Usuario = require("../modelos/Usuario");
 const { enviarCorreoValidacion } = require("../../servidor/nodemailer/email");
 const { generarHash, obtenerHash, borrarHash } = require("./hashController");
+const { eliminarTarea } = require("./tareaController");
 
 const obtenerUsuario = async (idUsuario) => {
   try {
@@ -39,20 +40,16 @@ const crearUsuario = async (usuario) => {
       password: passwordEncriptada,
     });
     const hashUsuario = await generarHash(usuarioCreado._id);
-    await enviarCorreoValidacion(usuarioCreado.email, hashUsuario.hash);
+    enviarCorreoValidacion(usuarioCreado.email, hashUsuario.hash);
     return usuarioCreado;
   } catch (err) {
-    let nuevoError;
-    if (err.message.includes("username")) {
-      nuevoError = crearError("El nombre de usuario ya existe", 403);
-    } else if (err.message.includes("email")) {
-      nuevoError = crearError("El email usado ya existe", 403);
-    } else {
-      nuevoError = crearError(
-        `No se ha podido crear el usuario: ${err.message}`
-      );
+    if (usuarioCreado) {
+      await eliminarUsuario(usuarioCreado._id);
     }
     debug(chalk.redBright.bold("No se ha podido crear el usuario"));
+    const nuevoError = crearError(
+      `No se ha podido crear el usuario: ${err.message}`
+    );
     throw err.codigo ? err : nuevoError;
   }
 };

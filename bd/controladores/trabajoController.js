@@ -4,11 +4,7 @@ const { crearError } = require("../../servidor/errores");
 const Trabajo = require("../modelos/Trabajo");
 const Usuario = require("../modelos/Usuario");
 
-const listarTrabajos = async (id) => {
-  const usuario = await Usuario.findById(id);
-  if (!usuario.activo) {
-    throw crearError("El usuario no esta verificado", 403);
-  }
+const listarTrabajos = async () => {
   try {
     const listadoTrabajos = await Trabajo.find({
       salario: { $exists: true },
