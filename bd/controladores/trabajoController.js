@@ -19,6 +19,16 @@ const listarTrabajos = async () => {
   }
 };
 
+const listarFormaciones = async () => {
+  try {
+    const listaFormaciones = Trabajo.find({ salario: { $exists: false } });
+    return listaFormaciones;
+  } catch (err) {
+    debug(chalk.redBright.bold("No se han podido listar las formaciones"));
+    throw crearError("No se han podido listar las formaciones");
+  }
+};
+
 const obtenerTrabajo = async (idTrabajo) => {
   try {
     const trabajoObtenido = await Trabajo.findById(idTrabajo).populate(
@@ -109,4 +119,5 @@ module.exports = {
   listarTrabajos,
   crearTrabajo,
   anyadirTareaTrabajo,
+  listarFormaciones,
 };

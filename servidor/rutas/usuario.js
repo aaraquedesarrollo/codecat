@@ -42,6 +42,7 @@ router.get("/confirmar-email/:hashUsuario", async (req, res, next) => {
     next(err);
   }
 });
+
 router.put("/modificar-usuario/:id", async (req, res, next) => {
   const { id } = req.params;
   const modificaciones = req.body;
