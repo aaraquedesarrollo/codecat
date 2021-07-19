@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const Tarea = require("./TareaSchema");
+const Tarea = require("./Tarea");
 
 const TrabajoSchema = new Schema({
   nombre: {
@@ -12,14 +12,7 @@ const TrabajoSchema = new Schema({
     type: Number,
     required: true,
   },
-  completado: {
-    type: Boolean,
-    default: false,
-  },
-  salario: {
-    type: Number,
-    required: true,
-  },
+  salario: Number,
 });
 
 const Trabajo = model("Trabajo", TrabajoSchema, "trabajo");

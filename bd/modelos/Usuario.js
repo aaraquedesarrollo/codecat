@@ -27,7 +27,7 @@ const UsuarioSchema = new Schema({
     default: false,
   },
   trabajo: Schema.Types.ObjectId,
-  gato: Schema.Types.ObjectId,
+  gato: String,
 });
 
 const Usuario = model("Usuario", UsuarioSchema, "usuario");

@@ -1,7 +1,7 @@
 const debug = require("debug")("codeCatAPI:bd:controladores:tareaController");
 const chalk = require("chalk");
 const { crearError } = require("../../servidor/errores");
-const Trabajo = require("../modelos/TrabajoSchema");
+const Trabajo = require("../modelos/Trabajo");
 
 const listarTrabajos = async () => {
   try {

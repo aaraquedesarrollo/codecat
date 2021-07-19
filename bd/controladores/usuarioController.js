@@ -2,7 +2,7 @@ const debug = require("debug")("codeCatAPI:bd:controladores:usuarioController");
 const chalk = require("chalk");
 const bcrypt = require("bcrypt");
 const { crearError } = require("../../servidor/errores");
-const Usuario = require("../modelos/UsuarioSchema");
+const Usuario = require("../modelos/Usuario");
 const { enviarCorreoValidacion } = require("../../servidor/nodemailer/email");
 const { generarHash, obtenerHash, borrarHash } = require("./hashController");
 
