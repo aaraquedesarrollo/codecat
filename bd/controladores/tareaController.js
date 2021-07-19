@@ -2,8 +2,8 @@ const debug = require("debug")("codeCatAPI:bd:controladores:tareaController");
 const chalk = require("chalk");
 const { crearError } = require("../../servidor/errores");
 
-const Tarea = require("../modelos/TareaSchema");
-const Usuario = require("../modelos/UsuarioSchema");
+const Tarea = require("../modelos/Tarea");
+const Usuario = require("../modelos/Usuario");
 
 const listarTareas = async () => {
   try {
