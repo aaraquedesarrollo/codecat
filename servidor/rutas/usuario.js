@@ -6,8 +6,10 @@ const {
   loginUsuario,
   confirmarHash,
   modificarUsuario,
+  obtenerUsuario,
   generarNuevaContrasenya,
 } = require("../../bd/controladores/usuarioController");
+const { authMiddleware } = require("../middlewares");
 
 const router = express.Router();
 
@@ -60,6 +62,16 @@ router.put("/modificar-usuario/:id", async (req, res, next) => {
   try {
     const usuarioModificado = await modificarUsuario(id, modificaciones);
     res.json(usuarioModificado);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/datos", authMiddleware, async (req, res, next) => {
+  const id = req.idUsuario;
+  try {
+    const datosUsuario = await obtenerUsuario(id);
+    res.json(datosUsuario);
   } catch (err) {
     next(err);
   }
