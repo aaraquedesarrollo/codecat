@@ -13,13 +13,7 @@ const transport = nodemailer.createTransport({
   },
 });
 
-const enviarCorreoValidacion = async (destinatario, hash) => {
-  const mensaje = {
-    from: "codecat.productions@gmail.com",
-    to: destinatario,
-    subject: "Confirmación de email en CodeCat 🐱",
-    html: `Por favor, haz click en el siguiente link para confirmar tu dirección de email: ${process.env.URL_API}usuarios/confirmar-email/${hash}`,
-  };
+const enviarCorreo = (mensaje) => {
   transport.sendMail(mensaje, (err, info) => {
     if (err) {
       debug(chalk.redBright.bold("No he podido enviar el correo"));
@@ -31,6 +25,27 @@ const enviarCorreoValidacion = async (destinatario, hash) => {
   });
 };
 
+const enviarCorreoValidacion = async (destinatario, hash) => {
+  const mensaje = {
+    from: "codecat.productions@gmail.com",
+    to: destinatario,
+    subject: "Confirmación de email en CodeCat 🐱",
+    html: `Por favor, haz click en el siguiente link para confirmar tu dirección de email: ${process.env.URL_API}usuarios/confirmar-email/${hash}`,
+  };
+  enviarCorreo(mensaje);
+};
+
+const enviarCorreoNuevaContrasenya = (destinatario, nuevaContrasenya) => {
+  const mensaje = {
+    from: "codecat.productions@gmail.com",
+    to: destinatario,
+    subject: "Cambio de contraseña",
+    html: `Aqui tienes la nueva contraseña: ${nuevaContrasenya} <br> Haz click aqui para loguearte: ${process.env.URL_FRONT}`,
+  };
+  enviarCorreo(mensaje);
+};
+
 module.exports = {
   enviarCorreoValidacion,
+  enviarCorreoNuevaContrasenya,
 };

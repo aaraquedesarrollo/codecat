@@ -6,6 +6,7 @@ const {
   loginUsuario,
   confirmarHash,
   modificarUsuario,
+  generarNuevaContrasenya,
 } = require("../../bd/controladores/usuarioController");
 
 const router = express.Router();
@@ -38,6 +39,16 @@ router.get("/confirmar-email/:hashUsuario", async (req, res, next) => {
     const { hashUsuario } = req.params;
     await confirmarHash(hashUsuario);
     res.redirect(process.env.URL_FRONT);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put("/generar-contrasenya/", async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    await generarNuevaContrasenya(email);
+    res.json({ error: false, mensaje: "Contrasenya cambiada" });
   } catch (err) {
     next(err);
   }
