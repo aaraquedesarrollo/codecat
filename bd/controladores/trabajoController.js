@@ -2,13 +2,17 @@ const debug = require("debug")("codeCatAPI:bd:controladores:tareaController");
 const chalk = require("chalk");
 const { crearError } = require("../../servidor/errores");
 const Trabajo = require("../modelos/Trabajo");
+const Usuario = require("../modelos/Usuario");
 
-const listarTrabajos = async () => {
+const listarTrabajos = async (id) => {
+  const usuario = await Usuario.findById(id);
+  if (!usuario.activo) {
+    throw crearError("El usuario no esta verificado", 403);
+  }
   try {
-    const listadoTrabajos = await Trabajo.find().populate("tareas");
-    if (!listadoTrabajos) {
-      throw crearError("No existen trabajos", 404);
-    }
+    const listadoTrabajos = await Trabajo.find({
+      salario: { $exists: true },
+    }).populate("tareas");
     return listadoTrabajos;
   } catch (err) {
     debug(chalk.redBright.bold("No se han podido listar los trabajos"));

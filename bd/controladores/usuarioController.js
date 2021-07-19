@@ -85,9 +85,7 @@ const loginUsuario = async (username, password) => {
     if (!contrasenyaCoincide) {
       throw crearError("Credenciales incorrectas", 400);
     }
-    if (!usuarioEncontrado.activo) {
-      throw crearError("El usuario no esta verificado", 403);
-    }
+
     return usuarioEncontrado._id;
   } catch (err) {
     debug(
