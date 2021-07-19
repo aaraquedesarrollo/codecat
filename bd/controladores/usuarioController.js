@@ -72,7 +72,9 @@ const confirmarHash = async (hashUsuario) => {
 
 const loginUsuario = async (username, password) => {
   try {
-    const usuarioEncontrado = await Usuario.findOne({ username });
+    const usuarioEncontrado = await Usuario.findOne({
+      $or: [{ email: username }, { username }],
+    });
     if (!usuarioEncontrado) {
       throw crearError("Credenciales incorrectas", 400);
     }
