@@ -2,7 +2,7 @@ const debug = require("debug")("codeCatAPI:bd:controladores:nivelController");
 const chalk = require("chalk");
 const { crearError } = require("../../servidor/errores");
 
-const Nivel = require("../modelos/NivelSchema");
+const Nivel = require("../modelos/Nivel");
 
 const listarNiveles = async () => {
   try {

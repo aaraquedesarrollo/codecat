@@ -7,7 +7,6 @@ const {
   confirmarHash,
   modificarUsuario,
 } = require("../../bd/controladores/usuarioController");
-const { enviarCorreoValidacion } = require("../nodemailer/email");
 
 const router = express.Router();
 

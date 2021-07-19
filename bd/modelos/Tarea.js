@@ -1,25 +1,8 @@
 const { Schema, model } = require("mongoose");
 
 const RecompensaSchema = new Schema({
-  chuches: {
-    type: Number,
-    required: true,
-  },
-  experiencia: {
-    type: Number,
-    required: true,
-  },
-});
-
-const ObjetivoSchema = new Schema({
-  objetivo: {
-    type: String,
-    required: true,
-  },
-  correcto: {
-    type: Boolean,
-    default: false,
-  },
+  chuches: Number,
+  experiencia: Number,
 });
 
 const TareaSchema = new Schema({
@@ -33,11 +16,7 @@ const TareaSchema = new Schema({
     required: true,
   },
   recompensa: RecompensaSchema,
-  completada: {
-    type: Boolean,
-    default: false,
-  },
-  objetivos: [ObjetivoSchema],
+  objetivos: [String],
 });
 
 const Tarea = model("Tarea", TareaSchema, "tarea");

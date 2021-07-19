@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 const { crearError } = require("../../servidor/errores");
-const Hash = require("../modelos/HashSchema");
+const Hash = require("../modelos/Hash");
 
 const obtenerHash = async (hashUsuario) => {
   try {
