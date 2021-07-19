@@ -3,7 +3,10 @@ const chalk = require("chalk");
 const bcrypt = require("bcrypt");
 const { crearError } = require("../../servidor/errores");
 const Usuario = require("../modelos/Usuario");
-const { enviarCorreoValidacion } = require("../../servidor/nodemailer/email");
+const {
+  enviarCorreoValidacion,
+  enviarCorreoNuevaContrasenya,
+} = require("../../servidor/nodemailer/email");
 const { generarHash, obtenerHash, borrarHash } = require("./hashController");
 const { eliminarTarea } = require("./tareaController");
 
@@ -23,34 +26,60 @@ const obtenerUsuario = async (idUsuario) => {
   }
 };
 
-const validarUsuario = async (idUsuario) => {
+const validarUsuarioPorId = async (idUsuario) => {
   const existeUsuario = await Usuario.findById(idUsuario);
   if (!existeUsuario) {
-    throw crearError("No existe el usuario", 404);
+    throw crearError("No existe un usuario con esta ID", 404);
+  }
+  return existeUsuario;
+};
+
+const validarUsuarioPorEmail = async (email) => {
+  const existeUsuario = await Usuario.findOne({ email });
+  if (!existeUsuario) {
+    throw crearError("No existe un usuario con este email", 403);
+  }
+  return existeUsuario;
+};
+
+const existeUsuarioRepetidoPorUsername = async (username) => {
+  const existeUsuario = await Usuario.findOne({ username });
+  if (!existeUsuario) {
+    throw crearError("Ya existe un usuario con este nombre de usuario", 403);
+  }
+  return true;
+};
+
+const existeUsuarioRepetidoPorEmail = async (email) => {
+  const existeUsuario = await Usuario.findOne({ email });
+  if (existeUsuario) {
+    throw crearError("Ya existe un usuario con este email", 403);
   }
   return true;
 };
 
 const crearUsuario = async (usuario) => {
+  const { username, email, password, _id } = usuario;
   let usuarioCreado;
   try {
-    const passwordEncriptada = await bcrypt.hash(usuario.password, 10);
+    existeUsuarioRepetidoPorUsername(username);
+    existeUsuarioRepetidoPorEmail(email);
+    const passwordEncriptada = await bcrypt.hash(password, 10);
     usuarioCreado = await Usuario.create({
       ...usuario,
       password: passwordEncriptada,
     });
-    const hashUsuario = await generarHash(usuarioCreado._id);
-    enviarCorreoValidacion(usuarioCreado.email, hashUsuario.hash);
+    const { hash } = await generarHash(_id);
+    enviarCorreoValidacion(email, hash);
     return usuarioCreado;
   } catch (err) {
     if (usuarioCreado) {
       await eliminarUsuario(usuarioCreado._id);
     }
     debug(chalk.redBright.bold("No se ha podido crear el usuario"));
-    const nuevoError = crearError(
-      `No se ha podido crear el usuario: ${err.message}`
-    );
-    throw err.codigo ? err : nuevoError;
+    throw err.codigo
+      ? err
+      : crearError(`No se ha podido crear el usuario: ${err.message}`);
   }
 };
 
@@ -64,6 +93,22 @@ const confirmarHash = async (hashUsuario) => {
     borrarHash(existeHash.hash);
   } catch (err) {
     throw crearError(`No se ha podido confirmar el hash ${err.message}`);
+  }
+};
+
+const generarNuevaContrasenya = async (email) => {
+  try {
+    const existeUsuario = await validarUsuarioPorEmail(email);
+    const contraseñaGenerada = Math.random().toString(36).substring(0, 10);
+    const passwordEncriptada = await bcrypt.hash(contraseñaGenerada, 10);
+    enviarCorreoNuevaContrasenya(email, contraseñaGenerada);
+    await modificarUsuario(existeUsuario._id, { password: passwordEncriptada });
+  } catch (err) {
+    throw err.codigo
+      ? err
+      : crearError(
+          `No se ha podido generar una nueva contraseña: ${err.message}`
+        );
   }
 };
 
@@ -99,7 +144,7 @@ const loginUsuario = async (username, password) => {
 
 const modificarUsuario = async (idUsuario, modificaciones) => {
   try {
-    await validarUsuario(idUsuario);
+    await validarUsuarioPorId(idUsuario);
     const usuarioModificado = await Usuario.findByIdAndUpdate(
       idUsuario,
       modificaciones
@@ -116,7 +161,7 @@ const modificarUsuario = async (idUsuario, modificaciones) => {
 
 const eliminarUsuario = async (idUsuario) => {
   try {
-    await validarUsuario(idUsuario);
+    await validarUsuarioPorId(idUsuario);
     const usuarioEliminado = await Usuario.findByIdAndDelete(idUsuario);
     return usuarioEliminado;
   } catch (err) {
@@ -143,11 +188,12 @@ const listarUsuarios = async () => {
 
 module.exports = {
   obtenerUsuario,
-  validarUsuario,
+  validarUsuarioPorId,
   crearUsuario,
   loginUsuario,
   modificarUsuario,
   eliminarUsuario,
   listarUsuarios,
   confirmarHash,
+  generarNuevaContrasenya,
 };
