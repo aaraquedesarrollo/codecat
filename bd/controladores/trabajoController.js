@@ -25,7 +25,9 @@ const listarTrabajos = async (id) => {
 
 const listarFormaciones = async () => {
   try {
-    const listaFormaciones = Trabajo.find({ salario: { $exists: false } });
+    const listaFormaciones = Trabajo.find({
+      salario: { $exists: false },
+    }).populate("tareas");
     return listaFormaciones;
   } catch (err) {
     debug(chalk.redBright.bold("No se han podido listar las formaciones"));
