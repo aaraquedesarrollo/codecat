@@ -20,7 +20,7 @@ const UsuarioSchema = new Schema({
     unique: true,
   },
   chuches: Number,
-  experiencia: Number,
+  experiencia: { type: Number, default: 0 },
   activo: {
     type: Boolean,
     required: true,

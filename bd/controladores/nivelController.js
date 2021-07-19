@@ -16,5 +16,23 @@ const listarNiveles = async () => {
     throw nuevoError;
   }
 };
+const obtenerNivelUsuario = async (experiencia) => {
+  try {
+    const nivel = await Nivel.find({
+      experiencia: { $lte: experiencia },
+    })
+      .sort([["experiencia", -1]])
+      .limit(1);
+    if (!nivel) {
+      throw crearError("No se a encontrado el nivel de usuario", 404);
+    }
+    return nivel[0];
+  } catch (err) {
+    const nuevoError = crearError(
+      `No se han podido obtener el nivel de usuario ${err.message}`
+    );
+    throw err.codigo ? err : nuevoError;
+  }
+};
 
-module.exports = { listarNiveles };
+module.exports = { listarNiveles, obtenerNivelUsuario };
