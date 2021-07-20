@@ -3,6 +3,7 @@ const debug = require("debug")("codeCatAPI:servidor:nodemailer");
 const chalk = require("chalk");
 const nodemailer = require("nodemailer");
 const { crearError } = require("../errores");
+const htmlConfirmarCorreo = require("./htmlConfirmarCorreo");
 
 const transport = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -30,7 +31,7 @@ const enviarCorreoValidacion = async (destinatario, hash) => {
     from: "codecat.productions@gmail.com",
     to: destinatario,
     subject: "Confirmación de email en CodeCat 🐱",
-    html: `Por favor, haz click en el siguiente link para confirmar tu dirección de email: ${process.env.URL_API}usuarios/confirmar-email/${hash}`,
+    html: htmlConfirmarCorreo(hash),
   };
   enviarCorreo(mensaje);
 };
