@@ -6,7 +6,7 @@ const Nivel = require("../modelos/Nivel");
 
 const listarNiveles = async () => {
   try {
-    const nivelesListados = await Nivel.find();
+    const nivelesListados = await Nivel.find().sort([["nivel", 1]]);
     return nivelesListados;
   } catch (err) {
     debug(chalk.redBright.bold("No se han podido listar los Niveles"));
