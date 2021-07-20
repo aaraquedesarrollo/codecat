@@ -58,7 +58,7 @@ const existeUsuarioRepetidoPorEmail = async (email) => {
 };
 
 const crearUsuario = async (usuario) => {
-  const { username, email, password, _id } = usuario;
+  const { username, email, password } = usuario;
   let usuarioCreado;
   try {
     existeUsuarioRepetidoPorUsername(username);
@@ -68,7 +68,7 @@ const crearUsuario = async (usuario) => {
       ...usuario,
       password: passwordEncriptada,
     });
-    const { hash } = await generarHash(_id);
+    const { hash } = await generarHash(usuarioCreado._id);
     enviarCorreoValidacion(email, hash);
     return usuarioCreado;
   } catch (err) {
