@@ -8,15 +8,19 @@ const app = express();
 
 const puerto = process.env.PORT || process.env.MI_PORT || 4000;
 
-const server = app.listen(puerto, () => {
-  debug(
-    chalk.greenBright.bold(`Servidor escuchando en http://localhost:${puerto}`)
-  );
-});
+const iniciarServidor = () => {
+  const server = app.listen(puerto, () => {
+    debug(
+      chalk.greenBright.bold(
+        `Servidor escuchando en http://localhost:${puerto}`
+      )
+    );
+  });
 
-server.on("error", (e) => {
-  errorServidor(e, puerto);
-  process.exit(1);
-});
+  server.on("error", (e) => {
+    errorServidor(e, puerto);
+    process.exit(1);
+  });
+};
 
-module.exports = app;
+module.exports = { app, iniciarServidor };

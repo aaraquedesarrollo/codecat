@@ -1,7 +1,7 @@
 const morganFreeman = require("morgan");
 const express = require("express");
 const cors = require("cors");
-const app = require("./init");
+const { app } = require("./init");
 const rutasTrabajo = require("./rutas/trabajo");
 const rutasUsuario = require("./rutas/usuario");
 const rutasTarea = require("./rutas/tarea");
