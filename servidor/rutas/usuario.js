@@ -46,9 +46,9 @@ router.get("/confirmar-email/:hashUsuario", async (req, res, next) => {
   }
 });
 
-router.put("/generar-contrasenya/", async (req, res, next) => {
+router.put("/generar-contrasenya/:email", async (req, res, next) => {
   try {
-    const { email } = req.body;
+    const { email } = req.params;
     await generarNuevaContrasenya(email);
     res.json({ error: false, mensaje: "Contrasenya cambiada" });
   } catch (err) {

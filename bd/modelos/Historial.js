@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 
 const TrabajoHistorialSchema = new Schema({
-  idTrabajo: { type: Schema.Types.ObjectId, unique: true },
+  idTrabajo: { type: Schema.Types.ObjectId, unique: true, ref: "Trabajo" },
   tareasCompletadas: {
     type: [Schema.Types.ObjectId],
     default: [],
