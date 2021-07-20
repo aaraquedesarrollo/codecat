@@ -4,6 +4,7 @@ const {
   obtenerNivelUsuario,
 } = require("../../bd/controladores/nivelController");
 const { obtenerUsuario } = require("../../bd/controladores/usuarioController");
+const { authMiddleware } = require("../middlewares");
 
 const router = express.Router();
 
@@ -15,7 +16,8 @@ router.get("/listado", async (req, res, next) => {
     next(err);
   }
 });
-router.get("/usuario", async (req, res, next) => {
+
+router.get("/usuario", authMiddleware, async (req, res, next) => {
   const id = req.idUsuario;
   try {
     const { experiencia } = await obtenerUsuario(id);

@@ -56,8 +56,8 @@ router.put("/generar-contrasenya/", async (req, res, next) => {
   }
 });
 
-router.put("/modificar-usuario/:id", async (req, res, next) => {
-  const { id } = req.params;
+router.put("/modificar-usuario/", authMiddleware, async (req, res, next) => {
+  const id = req.idUsuario;
   const modificaciones = req.body;
   try {
     const usuarioModificado = await modificarUsuario(id, modificaciones);

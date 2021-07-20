@@ -18,15 +18,13 @@ const listarNiveles = async () => {
 };
 const obtenerNivelUsuario = async (experiencia) => {
   try {
-    const nivel = await Nivel.find({
+    const nivel = await Nivel.findOne({
       experiencia: { $lte: experiencia },
-    })
-      .sort([["experiencia", -1]])
-      .limit(1);
+    }).sort([["experiencia", -1]]);
     if (!nivel) {
       throw crearError("No se a encontrado el nivel de usuario", 404);
     }
-    return nivel[0];
+    return nivel;
   } catch (err) {
     const nuevoError = crearError(
       `No se han podido obtener el nivel de usuario ${err.message}`
