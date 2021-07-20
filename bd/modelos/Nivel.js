@@ -5,6 +5,10 @@ const NivelSchema = new Schema({
     type: Number,
     required: true,
   },
+  titulo: {
+    type: String,
+    required: true,
+  },
   experiencia: {
     type: Number,
     required: true,
