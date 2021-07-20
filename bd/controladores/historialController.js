@@ -80,11 +80,39 @@ const anyadirTareaHistorialTrabajo = async (idUsuario, idTrabajo, idTarea) => {
     );
   }
 };
-
+const obtenerTareasTrabajo = async (idUsuario, idTrabajo) => {
+  try {
+    const tareas = await Historial.findOne({
+      idUsuario,
+      "trabajos.idTrabajo": idTrabajo,
+    }).select("tareasCompletadas");
+    return tareas;
+  } catch (err) {
+    throw crearError(`No se a podido obtener las tareas ${err.message}`);
+  }
+};
+const completarTrabajo = async (idUsuario, idTrabajo) => {
+  try {
+    const trabajoCompletado = await Historial.findOneAndUpdate(
+      {
+        idUsuario,
+        "trabajos.idTrabajo": idTrabajo,
+      },
+      {
+        "trabajos.trabajoCompletado": true,
+      }
+    );
+    return trabajoCompletado;
+  } catch (err) {
+    throw crearError(`No se a podido completar el trabajo ${err.message}`);
+  }
+};
 module.exports = {
   crearHistorial,
+  obtenerTareasTrabajo,
   comprobarTrabajoRepetido,
   comprobarHistorialUsuario,
   anyadirTrabajoAlHistorial,
   anyadirTareaHistorialTrabajo,
+  completarTrabajo,
 };
