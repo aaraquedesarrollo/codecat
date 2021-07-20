@@ -1,2 +1,4 @@
-require("./servidor/servidor");
-require("./bd/conexion");
+const { iniciarServidor } = require("./servidor/init");
+const conectarMongo = require("./bd/conexion");
+
+conectarMongo(iniciarServidor);
