@@ -15,7 +15,7 @@ const comprobarHistorialUsuario = (idUsuario) => {
     const historialCreado = Historial.findOne({ idUsuario });
     return historialCreado;
   } catch (err) {
-    throw crearError("Ha habido un error creando el historial");
+    throw crearError("Ha habido un error comprobando el historial");
   }
 };
 
@@ -83,6 +83,7 @@ const anyadirTareaHistorialTrabajo = async (idUsuario, idTrabajo, idTarea) => {
 
 module.exports = {
   crearHistorial,
+  comprobarTrabajoRepetido,
   comprobarHistorialUsuario,
   anyadirTrabajoAlHistorial,
   anyadirTareaHistorialTrabajo,
