@@ -3,11 +3,21 @@ const {
   crearHistorial,
   anyadirTrabajoAlHistorial,
   anyadirTareaHistorialTrabajo,
+  comprobarHistorialUsuario,
 } = require("../../bd/controladores/historialController");
 const { authMiddleware } = require("../middlewares");
 
 const router = express.Router();
-
+// ruta para comprobar que el usuario tiene historial
+router.get("/comprobar-historial", authMiddleware, async (req, res, next) => {
+  try {
+    const { idUsuario } = req;
+    const historial = await comprobarHistorialUsuario(idUsuario);
+    res.status(201).json(historial);
+  } catch (err) {
+    next(err);
+  }
+});
 // BORRAR, ESTO IRA CUANDO SE AÑADE UNA TAREA
 router.post("/crear-historial", authMiddleware, async (req, res, next) => {
   try {
@@ -44,9 +54,9 @@ router.put(
   async (req, res, next) => {
     try {
       const { idTrabajo, idTarea } = req.params;
-      const { idUsuario } = req;
+      const id = req.idUsuario;
       const historialModificado = await anyadirTareaHistorialTrabajo(
-        idUsuario,
+        id,
         idTrabajo,
         idTarea
       );
