@@ -22,10 +22,10 @@ router.get("/usuario", authMiddleware, async (req, res, next) => {
   try {
     const { experiencia } = await obtenerUsuario(id);
     const nivelUsuario = await obtenerNivelUsuario(experiencia);
-    console.log(nivelUsuario, experiencia);
     res.json(nivelUsuario);
   } catch (err) {
     next(err);
   }
 });
+
 module.exports = router;
