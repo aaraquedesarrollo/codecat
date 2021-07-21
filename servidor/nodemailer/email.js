@@ -36,11 +36,21 @@ const enviarCorreoValidacion = async (destinatario, hash) => {
   enviarCorreo(mensaje);
 };
 
-const enviarCorreoNuevaContrasenya = (destinatario, nuevaContrasenya) => {
+const enviarCorreoNuevaContrasenya = (destinatario) => {
   const mensaje = {
     from: "codecat.productions@gmail.com",
     to: destinatario,
-    subject: "Cambio de contraseña",
+    subject: "Cambio de contraseña: Confirmar cambio",
+    html: `Haz click <a href="${process.env.URL_API}/usuarios/generar-contrasenya/${destinatario}">aqui</a> para cambiar la contraseña`,
+  };
+  enviarCorreo(mensaje);
+};
+
+const enviarCorreoConstrenyaCambiada = (destinatario, nuevaContrasenya) => {
+  const mensaje = {
+    from: "codecat.productions@gmail.com",
+    to: destinatario,
+    subject: "Cambio de contraseña: Contraseña cambiada",
     html: `Aqui tienes la nueva contraseña: ${nuevaContrasenya} <br> Haz click aqui para loguearte: ${process.env.URL_FRONT}`,
   };
   enviarCorreo(mensaje);
@@ -48,5 +58,6 @@ const enviarCorreoNuevaContrasenya = (destinatario, nuevaContrasenya) => {
 
 module.exports = {
   enviarCorreoValidacion,
+  enviarCorreoConstrenyaCambiada,
   enviarCorreoNuevaContrasenya,
 };

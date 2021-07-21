@@ -5,7 +5,7 @@ const { crearError } = require("../../servidor/errores");
 const Usuario = require("../modelos/Usuario");
 const {
   enviarCorreoValidacion,
-  enviarCorreoNuevaContrasenya,
+  enviarCorreoConstrenyaCambiada,
 } = require("../../servidor/nodemailer/email");
 const { generarHash, obtenerHash, borrarHash } = require("./hashController");
 
@@ -100,7 +100,7 @@ const generarNuevaContrasenya = async (email) => {
     const existeUsuario = await validarUsuarioPorEmail(email);
     const contraseñaGenerada = Math.random().toString(36).substring(0, 10);
     const passwordEncriptada = await bcrypt.hash(contraseñaGenerada, 10);
-    enviarCorreoNuevaContrasenya(email, contraseñaGenerada);
+    enviarCorreoConstrenyaCambiada(email, contraseñaGenerada);
     await modificarUsuario(existeUsuario._id, { password: passwordEncriptada });
   } catch (err) {
     throw err.codigo
