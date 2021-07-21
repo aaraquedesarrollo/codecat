@@ -1,4 +1,5 @@
 const express = require("express");
+const { check } = require("express-validator");
 const {
   crearHistorial,
   anyadirTrabajoAlHistorial,
@@ -6,13 +7,15 @@ const {
   comprobarHistorialUsuario,
   obtenerTareasTrabajo,
 } = require("../../bd/controladores/historialController");
-const { authMiddleware } = require("../middlewares");
+const { authMiddleware, validarErrores } = require("../middlewares");
 
 const router = express.Router();
 
 // ruta para comprobar que el usuario tiene historial
 router.get(
   "/comprobar-tareas/:idTrabajo",
+  check("idTrabajo", "Id de trabajo incorrecta").isMongoId(),
+  validarErrores,
   authMiddleware,
   async (req, res, next) => {
     try {
@@ -49,6 +52,8 @@ router.post("/crear-historial", authMiddleware, async (req, res, next) => {
 // BORRAR, ESTO IRA CUANDo SE AÑADE UNA TAREA
 router.put(
   "/anyadir-trabajo/:idTrabajo",
+  check("idTrabajo", "Id de trabajo incorrecta").isMongoId(),
+  validarErrores,
   authMiddleware,
   async (req, res, next) => {
     try {
@@ -67,6 +72,9 @@ router.put(
 
 router.put(
   "/anyadir-tarea/:idTrabajo/:idTarea",
+  check("idTrabajo", "Id de trabajo incorrecta").isMongoId(),
+  check("idTarea", "Id de tarea incorrecta").isMongoId(),
+  validarErrores,
   authMiddleware,
   async (req, res, next) => {
     try {
@@ -83,11 +91,5 @@ router.put(
     }
   }
 );
-
-// al hacer click en el trabajo, se añade el trabajo al historial del usuario
-
-// cuando completas una tarea, se añade a la lista de tareas
-
-// al finalizar todas las tareas se pone el trabajo como completado
 
 module.exports = router;

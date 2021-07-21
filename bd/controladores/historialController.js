@@ -21,9 +21,13 @@ const comprobarHistorialUsuario = (idUsuario) => {
 
 const comprobarTrabajoRepetido = async (idUsuario, idTrabajo) => {
   try {
-    const { trabajos: listadoTrabajos } = await Historial.findOne({
+    const historial = await Historial.findOne({
       idUsuario,
     });
+    if (!historial) {
+      return false;
+    }
+    const { trabajos: listadoTrabajos } = historial;
     const repetido = listadoTrabajos.some((trabajo) =>
       trabajo.idTrabajo.equals(idTrabajo)
     );
