@@ -10,6 +10,7 @@ const {
   generarNuevaContrasenya,
 } = require("../../bd/controladores/usuarioController");
 const { authMiddleware } = require("../middlewares");
+const { enviarCorreoNuevaContrasenya } = require("../nodemailer/email");
 
 const router = express.Router();
 
@@ -41,6 +42,16 @@ router.get("/confirmar-email/:hashUsuario", async (req, res, next) => {
     const { hashUsuario } = req.params;
     await confirmarHash(hashUsuario);
     res.redirect(process.env.URL_FRONT);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/enviar-nueva-contrsenya/:email", async (req, res, next) => {
+  try {
+    const { email } = req.params;
+    enviarCorreoNuevaContrasenya(email);
+    res.json({ error: false, mensaje: "Correo enviado" });
   } catch (err) {
     next(err);
   }
