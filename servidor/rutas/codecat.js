@@ -1,6 +1,7 @@
 const express = require("express");
 const {
   obtenerNivelUsuario,
+  obtenerSigueinteNivel,
 } = require("../../bd/controladores/nivelController");
 const {
   listarFormaciones,
@@ -16,9 +17,16 @@ router.get("/cargar-informacion", authMiddleware, async (req, res, next) => {
     const { idUsuario } = req;
     const usuario = await obtenerUsuario(idUsuario);
     const nivelUsuario = await obtenerNivelUsuario(usuario.experiencia);
+    const siguienteNivel = await obtenerSigueinteNivel(usuario.experiencia);
     const listadoFormaciones = await listarFormaciones();
     const listadoTrabajos = await listarTrabajos();
-    res.json({ usuario, nivelUsuario, listadoFormaciones, listadoTrabajos });
+    res.json({
+      usuario,
+      nivelUsuario,
+      listadoFormaciones,
+      listadoTrabajos,
+      siguienteNivel,
+    });
   } catch (err) {
     next(err);
   }

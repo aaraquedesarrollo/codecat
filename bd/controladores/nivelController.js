@@ -32,5 +32,21 @@ const obtenerNivelUsuario = async (experiencia) => {
     throw err.codigo ? err : nuevoError;
   }
 };
+const obtenerSigueinteNivel = async (experiencia) => {
+  try {
+    const nivel = await Nivel.findOne({
+      experiencia: { $gte: experiencia },
+    }).sort([["experiencia", 1]]);
+    if (!nivel) {
+      throw crearError("No se ha podido obtener el siguiente nivel", 404);
+    }
+    return nivel;
+  } catch (err) {
+    const nuevoError = crearError(
+      `No se han podido obtener el suiguiente nivel ${err.message}`
+    );
+    throw err.codigo ? err : nuevoError;
+  }
+};
 
-module.exports = { listarNiveles, obtenerNivelUsuario };
+module.exports = { listarNiveles, obtenerNivelUsuario, obtenerSigueinteNivel };
