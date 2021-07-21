@@ -36,7 +36,6 @@ router.post(
 router.post(
   "/login",
   body("username", "Nombre de usuario incorrecto").isAlphanumeric(),
-  body("password", "Contraseña incorrecta").isStrongPassword(),
   validarErrores,
   async (req, res, next) => {
     try {
