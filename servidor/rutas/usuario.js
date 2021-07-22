@@ -7,8 +7,9 @@ const {
   loginUsuario,
   confirmarHash,
   generarNuevaContrasenya,
+  modificarUsuario,
 } = require("../../bd/controladores/usuarioController");
-const { validarErrores } = require("../middlewares");
+const { validarErrores, authMiddleware } = require("../middlewares");
 const { enviarCorreoNuevaContrasenya } = require("../nodemailer/email");
 
 const router = express.Router();
@@ -92,5 +93,15 @@ router.put(
     }
   }
 );
+router.put("/modificar", authMiddleware, async (req, res, next) => {
+  try {
+    const { idUsuario } = req;
+    const modificaciones = req.body;
+    const usuarioModificado = await modificarUsuario(idUsuario, modificaciones);
+    res.json(usuarioModificado);
+  } catch (err) {
+    next(err);
+  }
+});
 
 module.exports = router;
