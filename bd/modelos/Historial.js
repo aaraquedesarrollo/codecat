@@ -3,9 +3,7 @@ const { Schema, model } = require("mongoose");
 const TrabajoHistorialSchema = new Schema({
   idTrabajo: {
     type: Schema.Types.ObjectId,
-    unique: true,
     ref: "Trabajo",
-    partialFilterExpression: { name: { $exists: true } },
   },
   tareasCompletadas: {
     type: [Schema.Types.ObjectId],
