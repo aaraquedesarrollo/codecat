@@ -14,7 +14,7 @@ const iniciarServidor = () => {
       chalk.greenBright.bold(
         `Servidor escuchando en ${
           process.env.PORT
-            ? "https://codecat-backend.herokuapp.com"
+            ? "https://codecat-backend.herokuapp.com:"
             : "http://localhost:"
         }${puerto}`
       )
