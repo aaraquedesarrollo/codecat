@@ -39,13 +39,6 @@ const comprobarTrabajoRepetido = async (idUsuario, idTrabajo) => {
 
 const anyadirTrabajoAlHistorial = async (idUsuario, idTrabajo) => {
   try {
-    const repetido = await comprobarTrabajoRepetido(idUsuario, idTrabajo);
-    if (repetido) {
-      throw crearError(
-        "Ya existe este trabajo en el historial del usuario",
-        409
-      );
-    }
     const historialModificado = await Historial.findOneAndUpdate(
       { idUsuario },
       {
