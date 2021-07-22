@@ -1,9 +1,7 @@
 const debug = require("debug")("codeCatAPI:bd:controladores:tareaController");
 const chalk = require("chalk");
 const { crearError } = require("../../servidor/errores");
-
 const Tarea = require("../modelos/Tarea");
-const Usuario = require("../modelos/Usuario");
 
 const listarTareas = async () => {
   try {
@@ -21,9 +19,6 @@ const listarTareas = async () => {
 const obtenerTarea = async (idTarea, idUsuario) => {
   try {
     const tareaObtenida = await Tarea.findById(idTarea);
-    const usuario = await Usuario.findById(idUsuario);
-
-    console.log(tareaObtenida);
     if (!tareaObtenida) {
       throw crearError("No existen la tarea", 404);
     }

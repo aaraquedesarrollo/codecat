@@ -96,22 +96,22 @@ const eliminarTrabajo = async (idTrabajo) => {
   }
 };
 
-const anyadirTareaTrabajo = async (idTrabajo, idTarea) => {
-  try {
-    const tareaAnyadida = await Trabajo.findByIdAndUpdate(idTrabajo, {
-      $push: { tareas: idTarea },
-    });
-    if (!tareaAnyadida) {
-      throw crearError("No existe el trabajo donde anñadir la tarea", 404);
-    }
-  } catch (err) {
-    debug(chalk.redBright.bold("No se ha podido añadir la tarea al trabajo"));
-    const nuevoError = crearError(
-      `No se ha podido añadir la tarea al trabajo ${err.message}`
-    );
-    throw err.codigo ? err : nuevoError;
-  }
-};
+// const anyadirTareaTrabajo = async (idTrabajo, idTarea) => {
+//   try {
+//     const tareaAnyadida = await Trabajo.findByIdAndUpdate(idTrabajo, {
+//       $push: { tareas: idTarea },
+//     });
+//     if (!tareaAnyadida) {
+//       throw crearError("No existe el trabajo donde anñadir la tarea", 404);
+//     }
+//   } catch (err) {
+//     debug(chalk.redBright.bold("No se ha podido añadir la tarea al trabajo"));
+//     const nuevoError = crearError(
+//       `No se ha podido añadir la tarea al trabajo ${err.message}`
+//     );
+//     throw err.codigo ? err : nuevoError;
+//   }
+// };
 
 module.exports = {
   eliminarTrabajo,
@@ -119,6 +119,6 @@ module.exports = {
   obtenerTrabajo,
   listarTrabajos,
   crearTrabajo,
-  anyadirTareaTrabajo,
+  // anyadirTareaTrabajo,
   listarFormaciones,
 };
