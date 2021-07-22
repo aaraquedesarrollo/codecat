@@ -6,12 +6,13 @@ const {
   anyadirTareaHistorialTrabajo,
   comprobarHistorialUsuario,
   obtenerTareasTrabajo,
+  comprobarTrabajoRepetido,
 } = require("../../bd/controladores/historialController");
 const { authMiddleware, validarErrores } = require("../middlewares");
 
 const router = express.Router();
 
-// ruta para comprobar que el usuario tiene historial
+// Ruta para obtener listado de tareas segun el trabajo
 router.get(
   "/comprobar-tareas/:idTrabajo",
   check("idTrabajo", "Id de trabajo incorrecta").isMongoId(),
@@ -28,7 +29,7 @@ router.get(
     }
   }
 );
-// Ruta para obtener listado de tareas segun el trabajo
+// ruta para comprobar que el usuario tiene historial
 router.get("/comprobar-historial", authMiddleware, async (req, res, next) => {
   try {
     const { idUsuario } = req;
@@ -38,7 +39,7 @@ router.get("/comprobar-historial", authMiddleware, async (req, res, next) => {
     next(err);
   }
 });
-// BORRAR, ESTO IRA CUANDO SE AÑADE UNA TAREA
+
 router.post("/crear-historial", authMiddleware, async (req, res, next) => {
   try {
     const { idUsuario } = req;
@@ -49,27 +50,7 @@ router.post("/crear-historial", authMiddleware, async (req, res, next) => {
   }
 });
 
-// BORRAR, ESTO IRA CUANDo SE AÑADE UNA TAREA
-router.put(
-  "/anyadir-trabajo/:idTrabajo",
-  check("idTrabajo", "Id de trabajo incorrecta").isMongoId(),
-  validarErrores,
-  authMiddleware,
-  async (req, res, next) => {
-    try {
-      const { idTrabajo } = req.params;
-      const { idUsuario } = req;
-      const historialModificado = await anyadirTrabajoAlHistorial(
-        idUsuario,
-        idTrabajo
-      );
-      res.json(historialModificado);
-    } catch (err) {
-      next(err);
-    }
-  }
-);
-
+// Añade una tarea al trabajo del historial, si no existe el trabajo lo crea tambien
 router.put(
   "/anyadir-tarea/:idTrabajo/:idTarea",
   check("idTrabajo", "Id de trabajo incorrecta").isMongoId(),
@@ -80,6 +61,13 @@ router.put(
     try {
       const { idTrabajo, idTarea } = req.params;
       const { idUsuario } = req;
+      const existeTrabajo = await comprobarTrabajoRepetido(
+        idUsuario,
+        idTrabajo
+      );
+      if (!existeTrabajo) {
+        await anyadirTrabajoAlHistorial(idUsuario, idTrabajo);
+      }
       const historialModificado = await anyadirTareaHistorialTrabajo(
         idUsuario,
         idTrabajo,
