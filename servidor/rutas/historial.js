@@ -35,8 +35,10 @@ router.post("/crear-historial", authMiddleware, async (req, res, next) => {
     const { idUsuario } = req;
     const existeHistorial = await comprobarHistorialUsuario(idUsuario);
     if (!existeHistorial) {
-      const historialCreado = await crearHistorial(idUsuario);
-      res.status(201).json(historialCreado);
+      await crearHistorial(idUsuario);
+      res
+        .status(201)
+        .json({ error: false, mensaje: "Creado historial para el usuasio" });
     } else {
       res.json({ error: false, mensaje: "El usuario ya tiene historial" });
     }
