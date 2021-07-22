@@ -29,22 +29,17 @@ router.get(
     }
   }
 );
-// ruta para comprobar que el usuario tiene historial
-router.get("/comprobar-historial", authMiddleware, async (req, res, next) => {
-  try {
-    const { idUsuario } = req;
-    const historial = await comprobarHistorialUsuario(idUsuario);
-    res.status(201).json(historial);
-  } catch (err) {
-    next(err);
-  }
-});
 
 router.post("/crear-historial", authMiddleware, async (req, res, next) => {
   try {
     const { idUsuario } = req;
-    const historialCreado = await crearHistorial(idUsuario);
-    res.status(201).json(historialCreado);
+    const existeHistorial = await comprobarHistorialUsuario(idUsuario);
+    if (!existeHistorial) {
+      const historialCreado = await crearHistorial(idUsuario);
+      res.status(201).json(historialCreado);
+    } else {
+      res.json({ error: false, mensaje: "El usuario ya tiene historial" });
+    }
   } catch (err) {
     next(err);
   }
