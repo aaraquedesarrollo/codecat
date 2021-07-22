@@ -144,10 +144,8 @@ const loginUsuario = async (username, password) => {
 const modificarUsuario = async (idUsuario, modificaciones) => {
   try {
     await validarUsuarioPorId(idUsuario);
-    const usuarioModificado = await Usuario.findByIdAndUpdate(
-      idUsuario,
-      modificaciones
-    );
+    await Usuario.findByIdAndUpdate(idUsuario, modificaciones);
+    const usuarioModificado = await obtenerUsuario(idUsuario);
     return usuarioModificado;
   } catch (err) {
     debug(chalk.redBright.bold("No se ha podido modificar el usuario"));

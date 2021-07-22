@@ -19,7 +19,6 @@ router.post(
   "/registro",
   body("nombre", "Nombre incorrecto").isAlpha(),
   body("username", "Nombre de usuario incorrecto").isAlphanumeric(),
-  body("password", "Contraseña incorrecta").isStrongPassword(),
   body("email", "Direccion de email incorrecta").isEmail(),
   validarErrores,
   async (req, res, next) => {

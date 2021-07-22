@@ -7,7 +7,10 @@ const {
   listarFormaciones,
   listarTrabajos,
 } = require("../../bd/controladores/trabajoController");
-const { obtenerUsuario } = require("../../bd/controladores/usuarioController");
+const {
+  obtenerUsuario,
+  modificarUsuario,
+} = require("../../bd/controladores/usuarioController");
 const { authMiddleware } = require("../middlewares");
 
 const router = express.Router();
@@ -31,5 +34,22 @@ router.get("/cargar-informacion", authMiddleware, async (req, res, next) => {
     next(err);
   }
 });
+
+router.put(
+  "/nombre-gato/:nombreGato",
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const { idUsuario } = req;
+      const { nombreGato } = req.params;
+      const usuarioModificado = await modificarUsuario(idUsuario, {
+        gato: nombreGato,
+      });
+      res.json(usuarioModificado);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 module.exports = router;
