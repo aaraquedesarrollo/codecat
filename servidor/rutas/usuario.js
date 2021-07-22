@@ -6,8 +6,6 @@ const {
   crearUsuario,
   loginUsuario,
   confirmarHash,
-  modificarUsuario,
-  obtenerUsuario,
   generarNuevaContrasenya,
 } = require("../../bd/controladores/usuarioController");
 const { validarErrores } = require("../middlewares");
@@ -94,27 +92,5 @@ router.put(
     }
   }
 );
-
-// MARCADO PARA BORRAR
-// router.put("/modificar-usuario/", authMiddleware, async (req, res, next) => {
-//   const id = req.idUsuario;
-//   const modificaciones = req.body;
-//   try {
-//     const usuarioModificado = await modificarUsuario(id, modificaciones);
-//     res.json(usuarioModificado);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
-// router.get("/datos", authMiddleware, async (req, res, next) => {
-//   const id = req.idUsuario;
-//   try {
-//     const datosUsuario = await obtenerUsuario(id);
-//     res.json(datosUsuario);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
 
 module.exports = router;

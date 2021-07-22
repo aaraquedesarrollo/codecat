@@ -9,60 +9,48 @@ const {
 } = require("../../servidor/nodemailer/email");
 const { generarHash, obtenerHash, borrarHash } = require("./hashController");
 
-const obtenerUsuario = async (idUsuario) => {
+const obtenerUsuario = async (
+  condicion,
+  campo = "id",
+  throwError = false,
+  errorOnFound = false
+) => {
   try {
-    const usuarioObtenido = await Usuario.findById(idUsuario);
-    if (!usuarioObtenido) {
-      throw crearError("No existe el usuario", 404);
+    let usuarioObtenido = null;
+    // eslint-disable-next-line default-case
+    switch (campo) {
+      case "id":
+        usuarioObtenido = await Usuario.findById(condicion);
+        break;
+      case "username":
+        usuarioObtenido = await Usuario.findOne({ username: condicion });
+        break;
+      case "email":
+        usuarioObtenido = await Usuario.findOne({ email: condicion });
+        break;
+    }
+    if (throwError) {
+      if (errorOnFound) {
+        if (usuarioObtenido) {
+          throw crearError(`Ya existe un usuario con este ${campo}`, 403);
+        }
+      } else if (!usuarioObtenido)
+        throw crearError(`No existe un usuario con este ${campo}`, 404);
     }
     return usuarioObtenido;
   } catch (err) {
-    debug(chalk.redBright.bold("No se ha podido obtener el usuario"));
-    const nuevoError = crearError(
-      `No se ha podido obtener el usuario: ${err.message}`
+    throw crearError(
+      `No se ha podido obtener el usuario por ${campo} ${err.message}`
     );
-    throw err.codigo ? err : nuevoError;
   }
-};
-
-const validarUsuarioPorId = async (idUsuario) => {
-  const existeUsuario = await Usuario.findById(idUsuario);
-  if (!existeUsuario) {
-    throw crearError("No existe un usuario con esta ID", 404);
-  }
-  return existeUsuario;
-};
-
-const validarUsuarioPorEmail = async (email) => {
-  const existeUsuario = await Usuario.findOne({ email });
-  if (!existeUsuario) {
-    throw crearError("No existe un usuario con este email", 403);
-  }
-  return existeUsuario;
-};
-
-const existeUsuarioRepetidoPorUsername = async (username) => {
-  const existeUsuario = await Usuario.findOne({ username });
-  if (!existeUsuario) {
-    throw crearError("Ya existe un usuario con este nombre de usuario", 403);
-  }
-  return true;
-};
-
-const existeUsuarioRepetidoPorEmail = async (email) => {
-  const existeUsuario = await Usuario.findOne({ email });
-  if (existeUsuario) {
-    throw crearError("Ya existe un usuario con este email", 403);
-  }
-  return true;
 };
 
 const crearUsuario = async (usuario) => {
   const { username, email, password } = usuario;
   let usuarioCreado;
   try {
-    existeUsuarioRepetidoPorUsername(username);
-    existeUsuarioRepetidoPorEmail(email);
+    await obtenerUsuario(username, "username", true, true);
+    await obtenerUsuario(email, "email", true, true);
     const passwordEncriptada = await bcrypt.hash(password, 10);
     usuarioCreado = await Usuario.create({
       ...usuario,
@@ -75,7 +63,6 @@ const crearUsuario = async (usuario) => {
     if (usuarioCreado) {
       await eliminarUsuario(usuarioCreado._id);
     }
-    debug(chalk.redBright.bold("No se ha podido crear el usuario"));
     throw err.codigo
       ? err
       : crearError(`No se ha podido crear el usuario: ${err.message}`);
@@ -97,7 +84,7 @@ const confirmarHash = async (hashUsuario) => {
 
 const generarNuevaContrasenya = async (email) => {
   try {
-    const existeUsuario = await validarUsuarioPorEmail(email);
+    const existeUsuario = await obtenerUsuario(email, "email", true);
     const contraseñaGenerada = Math.random().toString(36).substring(0, 10);
     const passwordEncriptada = await bcrypt.hash(contraseñaGenerada, 10);
     enviarCorreoConstrenyaCambiada(email, contraseñaGenerada);
@@ -126,71 +113,45 @@ const loginUsuario = async (username, password) => {
     if (!contrasenyaCoincide) {
       throw crearError("Credenciales incorrectas", 400);
     }
-
     return usuarioEncontrado._id;
   } catch (err) {
-    debug(
-      chalk.redBright.bold(
-        "No se han podido comprobar las credenciales del usuario"
-      )
-    );
-    const nuevoError = crearError(
-      "No se han podido comprobar las credenciales del usuario"
-    );
-    throw err.codigo ? err : nuevoError;
+    throw err.codigo
+      ? err
+      : crearError("No se han podido comprobar las credenciales del usuario");
   }
 };
 
 const modificarUsuario = async (idUsuario, modificaciones) => {
   try {
-    await validarUsuarioPorId(idUsuario);
+    await obtenerUsuario(idUsuario, "id", true);
     await Usuario.findByIdAndUpdate(idUsuario, modificaciones);
     const usuarioModificado = await obtenerUsuario(idUsuario);
     return usuarioModificado;
   } catch (err) {
-    debug(chalk.redBright.bold("No se ha podido modificar el usuario"));
-    const nuevoError = crearError(
-      `No se ha podido modificar el usuario: ${err.message}`
-    );
-    throw err.codigo ? err : nuevoError;
+    throw err.codigo
+      ? err
+      : crearError(`No se ha podido modificar el usuario: ${err.message}`);
   }
 };
 
 const eliminarUsuario = async (idUsuario) => {
   try {
-    await validarUsuarioPorId(idUsuario);
+    await obtenerUsuario(idUsuario, "id", true);
     const usuarioEliminado = await Usuario.findByIdAndDelete(idUsuario);
     return usuarioEliminado;
   } catch (err) {
-    debug(chalk.redBright.bold("No se ha podido eliminar el usuario"));
-    const nuevoError = crearError(
-      `No se ha podido eliminar el usuario: ${err.message}`
-    );
-    throw err.codigo ? err : nuevoError;
-  }
-};
-
-const listarUsuarios = async () => {
-  try {
-    const listadoUsuarios = await Usuario.find();
-    return listadoUsuarios;
-  } catch (err) {
-    debug(chalk.redBright.bold("No se ha podido listar a los usuarios"));
-    const nuevoError = crearError(
-      `No se ha podido listar a los usuarios: ${err.message}`
-    );
-    throw err.codigo ? err : nuevoError;
+    throw err.codigo
+      ? err
+      : crearError(`No se ha podido eliminar el usuario: ${err.message}`);
   }
 };
 
 module.exports = {
   obtenerUsuario,
-  validarUsuarioPorId,
   crearUsuario,
   loginUsuario,
   modificarUsuario,
   eliminarUsuario,
-  listarUsuarios,
   confirmarHash,
   generarNuevaContrasenya,
 };
