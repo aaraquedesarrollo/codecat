@@ -6,7 +6,7 @@ const crearHistorial = (idUsuario) => {
     const historialCreado = Historial.create({ idUsuario });
     return historialCreado;
   } catch (err) {
-    throw crearError("Ha habido un error creando el historial");
+    throw crearError(`Ha habido un error creando el historial ${err.message}`);
   }
 };
 
