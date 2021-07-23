@@ -18,7 +18,9 @@ const { authMiddleware, validarErrores } = require("../middlewares");
 
 const router = express.Router();
 
-// Ruta para obtener listado de tareas segun el trabajo
+
+// ruta para comprobar que el usuario tiene las tareas en el historial
+
 router.get(
   "/comprobar-tareas/:idTrabajo",
   check("idTrabajo", "Id de trabajo incorrecta").isMongoId(),
