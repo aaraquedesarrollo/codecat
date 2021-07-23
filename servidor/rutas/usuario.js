@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const { body, check } = require("express-validator");
+const { body, check, oneOf } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const {
   crearUsuario,
@@ -33,7 +33,10 @@ router.post(
 
 router.post(
   "/login",
-  body("username", "Nombre de usuario incorrecto").isAlphanumeric(),
+  oneOf([
+    body("username", "Nombre de usuario incorrecto").isAlphanumeric(),
+    body("username", "Email incorrecto").isEmail(),
+  ]),
   validarErrores,
   async (req, res, next) => {
     try {
