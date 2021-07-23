@@ -1,4 +1,6 @@
 require("dotenv").config();
+const debug = require("debug")("codeCatAPI:servidor:middlewares");
+const chalk = require("chalk");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const { crearError } = require("./errores");
@@ -30,8 +32,8 @@ const authMiddleware = (req, res, next) => {
 const validarErrores = (req, res, next) => {
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
-    console.log(errores);
     const nuevoError = new Error(errores.array().map((error) => error.msg));
+    debug(chalk.redBrigth.bold(nuevoError));
     nuevoError.codigo = 400;
     return next(nuevoError);
   }
