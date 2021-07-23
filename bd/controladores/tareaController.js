@@ -16,7 +16,7 @@ const listarTareas = async () => {
   }
 };
 
-const obtenerTarea = async (idTarea, idUsuario) => {
+const obtenerTarea = async (idTarea) => {
   try {
     const tareaObtenida = await Tarea.findById(idTarea);
     if (!tareaObtenida) {
@@ -29,6 +29,17 @@ const obtenerTarea = async (idTarea, idUsuario) => {
       `No se ha podido obtener la tarea ${err.message}`
     );
     throw err.codigo ? err : nuevoError;
+  }
+};
+
+const obtenerRecompensaTarea = async (idTarea) => {
+  try {
+    const { recompensa } = await obtenerTarea(idTarea);
+    return { experiencia: recompensa.experiencia, chuches: recompensa.chuches };
+  } catch (err) {
+    throw crearError(
+      `No se ha podido obtener la recompensa de la tarea ${err.message}`
+    );
   }
 };
 
@@ -86,4 +97,5 @@ module.exports = {
   modificarTarea,
   obtenerTarea,
   crearTarea,
+  obtenerRecompensaTarea,
 };

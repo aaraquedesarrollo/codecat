@@ -8,6 +8,12 @@ const {
   obtenerTareasTrabajo,
   comprobarTrabajoRepetido,
 } = require("../../bd/controladores/historialController");
+const {
+  obtenerRecompensaTarea,
+} = require("../../bd/controladores/tareaController");
+const {
+  modificarUsuario,
+} = require("../../bd/controladores/usuarioController");
 const { authMiddleware, validarErrores } = require("../middlewares");
 
 const router = express.Router();
@@ -47,7 +53,6 @@ router.post("/crear-historial", authMiddleware, async (req, res, next) => {
   }
 });
 
-// Añade una tarea al trabajo del historial, si no existe el trabajo lo crea tambien
 router.put(
   "/anyadir-tarea/:idTrabajo/:idTarea",
   check("idTrabajo", "Id de trabajo incorrecta").isMongoId(),
@@ -70,6 +75,8 @@ router.put(
         idTrabajo,
         idTarea
       );
+      const { experiencia, chuches } = await obtenerRecompensaTarea(idTarea);
+      modificarUsuario(idUsuario, { $inc: { experiencia, chuches } });
       res.json(historialModificado);
     } catch (err) {
       next(err);
