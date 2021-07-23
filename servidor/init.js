@@ -12,7 +12,11 @@ const iniciarServidor = () => {
   const server = app.listen(puerto, () => {
     debug(
       chalk.greenBright.bold(
-        `Servidor escuchando en http://localhost:${puerto}`
+        `Servidor escuchando en ${
+          process.env.PORT
+            ? "https://codecat-backend.herokuapp.com:"
+            : "http://localhost:"
+        }${puerto}`
       )
     );
   });

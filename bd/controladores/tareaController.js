@@ -1,9 +1,7 @@
 const debug = require("debug")("codeCatAPI:bd:controladores:tareaController");
 const chalk = require("chalk");
 const { crearError } = require("../../servidor/errores");
-
 const Tarea = require("../modelos/Tarea");
-const Usuario = require("../modelos/Usuario");
 
 const listarTareas = async () => {
   try {
@@ -18,12 +16,9 @@ const listarTareas = async () => {
   }
 };
 
-const obtenerTarea = async (idTarea, idUsuario) => {
+const obtenerTarea = async (idTarea) => {
   try {
     const tareaObtenida = await Tarea.findById(idTarea);
-    const usuario = await Usuario.findById(idUsuario);
-
-    console.log(tareaObtenida);
     if (!tareaObtenida) {
       throw crearError("No existen la tarea", 404);
     }
@@ -34,6 +29,17 @@ const obtenerTarea = async (idTarea, idUsuario) => {
       `No se ha podido obtener la tarea ${err.message}`
     );
     throw err.codigo ? err : nuevoError;
+  }
+};
+
+const obtenerRecompensaTarea = async (idTarea) => {
+  try {
+    const { recompensa } = await obtenerTarea(idTarea);
+    return { experiencia: recompensa.experiencia, chuches: recompensa.chuches };
+  } catch (err) {
+    throw crearError(
+      `No se ha podido obtener la recompensa de la tarea ${err.message}`
+    );
   }
 };
 
@@ -91,4 +97,5 @@ module.exports = {
   modificarTarea,
   obtenerTarea,
   crearTarea,
+  obtenerRecompensaTarea,
 };

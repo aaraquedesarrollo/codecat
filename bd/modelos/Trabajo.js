@@ -8,7 +8,7 @@ const TrabajoSchema = new Schema({
     unique: true,
   },
   tareas: { type: [Schema.Types.ObjectId], ref: "Tarea" },
-  formacion_minima: {
+  nivel_minimo: {
     type: Number,
     required: true,
   },

@@ -1,18 +1,18 @@
 const { crearError } = require("../../servidor/errores");
 const Historial = require("../modelos/Historial");
 
-const crearHistorial = (idUsuario) => {
+const crearHistorial = async (idUsuario) => {
   try {
-    const historialCreado = Historial.create({ idUsuario });
+    const historialCreado = await Historial.create({ idUsuario });
     return historialCreado;
   } catch (err) {
-    throw crearError("Ha habido un error creando el historial");
+    throw crearError(`Ha habido un error creando el historial ${err.message}`);
   }
 };
 
-const comprobarHistorialUsuario = (idUsuario) => {
+const comprobarHistorialUsuario = async (idUsuario) => {
   try {
-    const historialCreado = Historial.findOne({ idUsuario });
+    const historialCreado = await Historial.findOne({ idUsuario });
     return historialCreado;
   } catch (err) {
     throw crearError("Ha habido un error comprobando el historial");
@@ -39,13 +39,6 @@ const comprobarTrabajoRepetido = async (idUsuario, idTrabajo) => {
 
 const anyadirTrabajoAlHistorial = async (idUsuario, idTrabajo) => {
   try {
-    const repetido = await comprobarTrabajoRepetido(idUsuario, idTrabajo);
-    if (repetido) {
-      throw crearError(
-        "Ya existe este trabajo en el historial del usuario",
-        409
-      );
-    }
     const historialModificado = await Historial.findOneAndUpdate(
       { idUsuario },
       {

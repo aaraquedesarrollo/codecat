@@ -6,12 +6,21 @@ const {
   anyadirTareaHistorialTrabajo,
   comprobarHistorialUsuario,
   obtenerTareasTrabajo,
+  comprobarTrabajoRepetido,
 } = require("../../bd/controladores/historialController");
+const {
+  obtenerRecompensaTarea,
+} = require("../../bd/controladores/tareaController");
+const {
+  modificarUsuario,
+} = require("../../bd/controladores/usuarioController");
 const { authMiddleware, validarErrores } = require("../middlewares");
 
 const router = express.Router();
 
+
 // ruta para comprobar que el usuario tiene las tareas en el historial
+
 router.get(
   "/comprobar-tareas/:idTrabajo",
   check("idTrabajo", "Id de trabajo incorrecta").isMongoId(),
@@ -28,47 +37,23 @@ router.get(
     }
   }
 );
-// Ruta para obtener listado de tareas segun el trabajo
-router.get("/comprobar-historial", authMiddleware, async (req, res, next) => {
-  try {
-    const { idUsuario } = req;
-    const historial = await comprobarHistorialUsuario(idUsuario);
-    res.status(201).json(historial);
-  } catch (err) {
-    next(err);
-  }
-});
-// BORRAR, ESTO IRA CUANDO SE AÑADE UNA TAREA
+
 router.post("/crear-historial", authMiddleware, async (req, res, next) => {
   try {
     const { idUsuario } = req;
-    const historialCreado = await crearHistorial(idUsuario);
-    res.status(201).json(historialCreado);
+    const existeHistorial = await comprobarHistorialUsuario(idUsuario);
+    if (!existeHistorial) {
+      await crearHistorial(idUsuario);
+      res
+        .status(201)
+        .json({ error: false, mensaje: "Creado historial para el usuasio" });
+    } else {
+      res.json({ error: false, mensaje: "El usuario ya tiene historial" });
+    }
   } catch (err) {
     next(err);
   }
 });
-
-// BORRAR, ESTO IRA CUANDo SE AÑADE UNA TAREA
-router.put(
-  "/anyadir-trabajo/:idTrabajo",
-  check("idTrabajo", "Id de trabajo incorrecta").isMongoId(),
-  validarErrores,
-  authMiddleware,
-  async (req, res, next) => {
-    try {
-      const { idTrabajo } = req.params;
-      const { idUsuario } = req;
-      const historialModificado = await anyadirTrabajoAlHistorial(
-        idUsuario,
-        idTrabajo
-      );
-      res.json(historialModificado);
-    } catch (err) {
-      next(err);
-    }
-  }
-);
 
 router.put(
   "/anyadir-tarea/:idTrabajo/:idTarea",
@@ -80,11 +65,20 @@ router.put(
     try {
       const { idTrabajo, idTarea } = req.params;
       const { idUsuario } = req;
+      const existeTrabajo = await comprobarTrabajoRepetido(
+        idUsuario,
+        idTrabajo
+      );
+      if (!existeTrabajo) {
+        await anyadirTrabajoAlHistorial(idUsuario, idTrabajo);
+      }
       const historialModificado = await anyadirTareaHistorialTrabajo(
         idUsuario,
         idTrabajo,
         idTarea
       );
+      const { experiencia, chuches } = await obtenerRecompensaTarea(idTarea);
+      modificarUsuario(idUsuario, { $inc: { experiencia, chuches } });
       res.json(historialModificado);
     } catch (err) {
       next(err);

@@ -1,16 +1,15 @@
 require("dotenv").config();
 const express = require("express");
-const { body, check } = require("express-validator");
+const { body, check, oneOf } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const {
   crearUsuario,
   loginUsuario,
   confirmarHash,
-  modificarUsuario,
-  obtenerUsuario,
   generarNuevaContrasenya,
+  modificarUsuario,
 } = require("../../bd/controladores/usuarioController");
-const { validarErrores } = require("../middlewares");
+const { validarErrores, authMiddleware } = require("../middlewares");
 const { enviarCorreoNuevaContrasenya } = require("../nodemailer/email");
 
 const router = express.Router();
@@ -19,7 +18,6 @@ router.post(
   "/registro",
   body("nombre", "Nombre incorrecto").isAlpha(),
   body("username", "Nombre de usuario incorrecto").isAlphanumeric(),
-  body("password", "Contraseña incorrecta").isStrongPassword(),
   body("email", "Direccion de email incorrecta").isEmail(),
   validarErrores,
   async (req, res, next) => {
@@ -35,7 +33,10 @@ router.post(
 
 router.post(
   "/login",
-  body("username", "Nombre de usuario incorrecto").isAlphanumeric(),
+  oneOf([
+    body("username", "Nombre de usuario incorrecto").isAlphanumeric(),
+    body("username", "Email incorrecto").isEmail(),
+  ]),
   validarErrores,
   async (req, res, next) => {
     try {
@@ -95,27 +96,15 @@ router.put(
     }
   }
 );
-
-// MARCADO PARA BORRAR
-// router.put("/modificar-usuario/", authMiddleware, async (req, res, next) => {
-//   const id = req.idUsuario;
-//   const modificaciones = req.body;
-//   try {
-//     const usuarioModificado = await modificarUsuario(id, modificaciones);
-//     res.json(usuarioModificado);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
-// router.get("/datos", authMiddleware, async (req, res, next) => {
-//   const id = req.idUsuario;
-//   try {
-//     const datosUsuario = await obtenerUsuario(id);
-//     res.json(datosUsuario);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+router.put("/modificar", authMiddleware, async (req, res, next) => {
+  try {
+    const { idUsuario } = req;
+    const modificaciones = req.body;
+    const usuarioModificado = await modificarUsuario(idUsuario, modificaciones);
+    res.json(usuarioModificado);
+  } catch (err) {
+    next(err);
+  }
+});
 
 module.exports = router;
