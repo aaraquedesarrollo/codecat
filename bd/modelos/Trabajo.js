@@ -13,6 +13,10 @@ const TrabajoSchema = new Schema({
     required: true,
   },
   salario: Number,
+  categoria: {
+    type: String,
+    required: true,
+  },
 });
 
 const Trabajo = model("Trabajo", TrabajoSchema, "trabajo");
