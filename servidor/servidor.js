@@ -5,7 +5,7 @@ const { app } = require("./init");
 const rutasUsuario = require("./rutas/usuario");
 const rutasHistorial = require("./rutas/historial");
 const rutasCodecat = require("./rutas/codecat");
-const rutasTrabajo = require("./rutas/trabajo");
+const rutasTrabajos = require("./rutas/trabajo");
 
 const { errorGeneral, error404 } = require("./errores");
 
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use("/codecat", rutasCodecat);
 app.use("/usuarios", rutasUsuario);
 app.use("/historial", rutasHistorial);
-app.use("/trabajo", rutasTrabajo);
+app.use("/trabajos", rutasTrabajos);
 
 // errores
 app.use(error404);
