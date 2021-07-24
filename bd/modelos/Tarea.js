@@ -5,6 +5,11 @@ const RecompensaSchema = new Schema({
   experiencia: Number,
 });
 
+const ObjetivoSchema = new Schema({
+  etiqueta: String,
+  children: [],
+});
+
 const TareaSchema = new Schema({
   nombre: {
     type: String,
@@ -16,7 +21,7 @@ const TareaSchema = new Schema({
     required: true,
   },
   recompensa: RecompensaSchema,
-  objetivos: [String],
+  objetivos: ObjetivoSchema,
 });
 
 const Tarea = model("Tarea", TareaSchema, "tarea");
