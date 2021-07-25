@@ -77,21 +77,41 @@ const anyadirTareaHistorialTrabajo = async (idUsuario, idTrabajo, idTarea) => {
     );
   }
 };
-/* const obtenerTareasTrabajo = async (idUsuario, idTrabajo) => {
+
+// const obtenerTareasTrabajo = async (idUsuario, idTrabajo) => {
+//   try {
+//     const historial = await Historial.findOne({
+//       idUsuario,
+//       "trabajos.idTrabajo": idTrabajo,
+//     });
+//     const tareasCompletadas = historial.trabajos
+//       .filter((trabajo) => trabajo.tareasCompletadas.lentgh !== 0)
+//       .map((trabajos) => trabajos.tareasCompletadas);
+//     console.log(tareasCompletadas);
+//     return tareasCompletadas;
+//   } catch (err) {
+//     throw crearError(`No se a podido obtener las tareas ${err.message}`);
+//   }
+// };
+
+const obtenerTareasCompletadasTrabajo = async (idUsuario, idTrabajo) => {
   try {
-    const historial = await Historial.findOne({
+    const trabajos = await Historial.findOne({
       idUsuario,
       "trabajos.idTrabajo": idTrabajo,
-    });
-    const tareasCompletadas = historial.trabajos
-      .filter((trabajo) => trabajo.tareasCompletadas.lentgh !== 0)
-      .map((trabajos) => trabajos.tareasCompletadas); 
-    console.log(tareasCompletadas);
+    }).select("-_id trabajos.$");
+    if (!trabajos) {
+      return [];
+    }
+    const { tareasCompletadas } = trabajos.trabajos[0];
     return tareasCompletadas;
   } catch (err) {
-    throw crearError(`No se a podido obtener las tareas ${err.message}`);
-  } 
-}; */
+    throw crearError(
+      `No se han podido obtener las tareas completadas de este trabajo ${err.message}`
+    );
+  }
+};
+
 const completarTrabajo = async (idUsuario, idTrabajo) => {
   try {
     const trabajoCompletado = await Historial.findOneAndUpdate(
@@ -111,6 +131,7 @@ const completarTrabajo = async (idUsuario, idTrabajo) => {
 module.exports = {
   crearHistorial,
   comprobarTrabajoRepetido,
+  obtenerTareasCompletadasTrabajo,
   comprobarHistorialUsuario,
   anyadirTrabajoAlHistorial,
   anyadirTareaHistorialTrabajo,

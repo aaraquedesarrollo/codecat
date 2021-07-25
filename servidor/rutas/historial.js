@@ -6,6 +6,7 @@ const {
   anyadirTareaHistorialTrabajo,
   comprobarHistorialUsuario,
   comprobarTrabajoRepetido,
+  obtenerTareasCompletadasTrabajo,
 } = require("../../bd/controladores/historialController");
 const {
   obtenerRecompensaTarea,
@@ -19,8 +20,8 @@ const router = express.Router();
 
 // ruta para comprobar que el usuario tiene las tareas en el historial
 
-/* router.get(
-  "/comprobar-tareas/:idTrabajo",
+router.get(
+  "/obtener-historial/trabajo/:idTrabajo",
   check("idTrabajo", "Id de trabajo incorrecta").isMongoId(),
   validarErrores,
   authMiddleware,
@@ -28,13 +29,26 @@ const router = express.Router();
     try {
       const { idUsuario } = req;
       const { idTrabajo } = req.params;
-      const tareas = await obtenerTareasTrabajo(idUsuario, idTrabajo);
-      res.status(200).json(tareas);
+      const tareas = await obtenerTareasCompletadasTrabajo(
+        idUsuario,
+        idTrabajo
+      );
+      res.json(tareas);
     } catch (err) {
       next(err);
     }
   }
-); */
+);
+
+router.get("/obtener-historial", authMiddleware, async (req, res, next) => {
+  try {
+    const { idUsuario } = req;
+    const historialUsuario = await comprobarHistorialUsuario(idUsuario);
+    res.json(historialUsuario);
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.post("/crear-historial", authMiddleware, async (req, res, next) => {
   try {
