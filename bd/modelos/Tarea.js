@@ -21,7 +21,8 @@ const TareaSchema = new Schema({
     required: true,
   },
   recompensa: RecompensaSchema,
-  objetivos: ObjetivoSchema,
+  objetivos: Schema.Types.Mixed,
+  etiqueta: String,
 });
 
 const Tarea = model("Tarea", TareaSchema, "tarea");
