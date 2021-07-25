@@ -12,6 +12,7 @@ const transport = nodemailer.createTransport({
     user: process.env.CODECAT_MAIL,
     pass: process.env.CODECAT_MAIL_PASS,
   },
+  tls: { rejectUnauthorized: false },
 });
 
 const enviarCorreo = (mensaje) => {
