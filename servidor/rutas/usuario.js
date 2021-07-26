@@ -8,6 +8,7 @@ const {
   confirmarHash,
   generarNuevaContrasenya,
   modificarUsuario,
+  obtenerUsuario,
 } = require("../../bd/controladores/usuarioController");
 const { validarErrores, authMiddleware } = require("../middlewares");
 const { enviarCorreoNuevaContrasenya } = require("../nodemailer/email");
@@ -81,6 +82,16 @@ router.get(
     }
   }
 );
+
+router.get("/informacion-usuario", authMiddleware, async (req, res, next) => {
+  try {
+    const { idUsuario } = req;
+    const usuario = await obtenerUsuario(idUsuario);
+    res.json(usuario);
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.put(
   "/generar-contrasenya/:email",
