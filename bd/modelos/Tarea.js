@@ -5,11 +5,6 @@ const RecompensaSchema = new Schema({
   experiencia: Number,
 });
 
-const ObjetivoSchema = new Schema({
-  etiqueta: String,
-  children: [],
-});
-
 const TareaSchema = new Schema({
   nombre: {
     type: String,
@@ -21,6 +16,10 @@ const TareaSchema = new Schema({
     required: true,
   },
   recompensa: RecompensaSchema,
+  tipo: {
+    type: String,
+    required: true,
+  },
   objetivos: Schema.Types.Mixed,
   etiqueta: String,
 });
