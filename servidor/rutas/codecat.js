@@ -1,6 +1,9 @@
 const express = require("express");
 const { check } = require("express-validator");
 const {
+  comprobarHistorialUsuario,
+} = require("../../bd/controladores/historialController");
+const {
   obtenerNivelUsuario,
   obtenerSiguienteNivel,
 } = require("../../bd/controladores/nivelController");
@@ -24,12 +27,14 @@ router.get("/cargar-informacion", authMiddleware, async (req, res, next) => {
     const siguienteNivel = await obtenerSiguienteNivel(usuario.experiencia);
     const listadoFormaciones = await listarFormaciones();
     const listadoTrabajos = await listarTrabajos();
+    const historialUsuario = await comprobarHistorialUsuario(idUsuario);
     res.json({
       usuario,
       nivelUsuario,
       listadoFormaciones,
       listadoTrabajos,
       siguienteNivel,
+      historialUsuario,
     });
   } catch (err) {
     next(err);

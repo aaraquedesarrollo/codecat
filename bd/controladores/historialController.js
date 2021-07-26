@@ -78,22 +78,6 @@ const anyadirTareaHistorialTrabajo = async (idUsuario, idTrabajo, idTarea) => {
   }
 };
 
-// const obtenerTareasTrabajo = async (idUsuario, idTrabajo) => {
-//   try {
-//     const historial = await Historial.findOne({
-//       idUsuario,
-//       "trabajos.idTrabajo": idTrabajo,
-//     });
-//     const tareasCompletadas = historial.trabajos
-//       .filter((trabajo) => trabajo.tareasCompletadas.lentgh !== 0)
-//       .map((trabajos) => trabajos.tareasCompletadas);
-//     console.log(tareasCompletadas);
-//     return tareasCompletadas;
-//   } catch (err) {
-//     throw crearError(`No se a podido obtener las tareas ${err.message}`);
-//   }
-// };
-
 const obtenerTareasCompletadasTrabajo = async (idUsuario, idTrabajo) => {
   try {
     const trabajos = await Historial.findOne({
@@ -120,7 +104,7 @@ const completarTrabajo = async (idUsuario, idTrabajo) => {
         "trabajos.idTrabajo": idTrabajo,
       },
       {
-        "trabajos.trabajoCompletado": true,
+        "trabajos.$.trabajoCompletado": true,
       }
     );
     return trabajoCompletado;
