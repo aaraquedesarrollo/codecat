@@ -2,6 +2,7 @@ const debug = require("debug")("codeCatAPI:bd:controladores:tareaController");
 const chalk = require("chalk");
 const { crearError } = require("../../servidor/errores");
 const Trabajo = require("../modelos/Trabajo");
+const { completarTrabajo } = require("./historialController");
 
 const listarTrabajos = async () => {
   try {
@@ -96,22 +97,24 @@ const eliminarTrabajo = async (idTrabajo) => {
   }
 };
 
-// const anyadirTareaTrabajo = async (idTrabajo, idTarea) => {
-//   try {
-//     const tareaAnyadida = await Trabajo.findByIdAndUpdate(idTrabajo, {
-//       $push: { tareas: idTarea },
-//     });
-//     if (!tareaAnyadida) {
-//       throw crearError("No existe el trabajo donde anñadir la tarea", 404);
-//     }
-//   } catch (err) {
-//     debug(chalk.redBright.bold("No se ha podido añadir la tarea al trabajo"));
-//     const nuevoError = crearError(
-//       `No se ha podido añadir la tarea al trabajo ${err.message}`
-//     );
-//     throw err.codigo ? err : nuevoError;
-//   }
-// };
+const comprobarTrabajoTerminado = async (
+  idUsuario,
+  idTrabajo,
+  tareasCompletadas
+) => {
+  try {
+    const comprobarTrabajo = await Trabajo.findById(idTrabajo);
+    if (comprobarTrabajo.tareas.length === tareasCompletadas.length) {
+      await completarTrabajo(idUsuario, idTrabajo);
+    }
+  } catch (err) {
+    debug(chalk.redBright.bold("No se ha podido comprobar el trabajo"));
+    const nuevoError = crearError(
+      `No se ha podido comprobar el trabajo ${err.message}`
+    );
+    throw err.codigo ? err : nuevoError;
+  }
+};
 
 module.exports = {
   eliminarTrabajo,
@@ -119,6 +122,6 @@ module.exports = {
   obtenerTrabajo,
   listarTrabajos,
   crearTrabajo,
-  // anyadirTareaTrabajo,
+  comprobarTrabajoTerminado,
   listarFormaciones,
 };

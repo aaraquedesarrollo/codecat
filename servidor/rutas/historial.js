@@ -12,6 +12,9 @@ const {
   obtenerRecompensaTarea,
 } = require("../../bd/controladores/tareaController");
 const {
+  comprobarTrabajoTerminado,
+} = require("../../bd/controladores/trabajoController");
+const {
   modificarUsuario,
 } = require("../../bd/controladores/usuarioController");
 const { authMiddleware, validarErrores } = require("../middlewares");
@@ -89,6 +92,11 @@ router.put(
         idTrabajo,
         idTarea
       );
+      const tareasCompletadas = await obtenerTareasCompletadasTrabajo(
+        idUsuario,
+        idTrabajo
+      );
+      await comprobarTrabajoTerminado(idUsuario, idTrabajo, tareasCompletadas);
       const { experiencia, chuches } = await obtenerRecompensaTarea(idTarea);
       modificarUsuario(idUsuario, { $inc: { experiencia, chuches } });
       res.json(historialModificado);
