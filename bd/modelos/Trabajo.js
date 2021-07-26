@@ -17,10 +17,6 @@ const TrabajoSchema = new Schema({
     type: String,
     required: true,
   },
-  tipo: {
-    type: String,
-    required: true,
-  },
 });
 
 const Trabajo = model("Trabajo", TrabajoSchema, "trabajo");
