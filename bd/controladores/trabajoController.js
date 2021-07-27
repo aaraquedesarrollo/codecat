@@ -8,7 +8,9 @@ const listarTrabajos = async () => {
   try {
     const listadoTrabajos = await Trabajo.find({
       salario: { $exists: true },
-    }).populate("tareas");
+    })
+      .populate("tareas")
+      .sort([["nivel_minimo", 1]]);
     return listadoTrabajos;
   } catch (err) {
     debug(chalk.redBright.bold("No se han podido listar los trabajos"));
@@ -21,9 +23,11 @@ const listarTrabajos = async () => {
 
 const listarFormaciones = async () => {
   try {
-    const listaFormaciones = Trabajo.find({
+    const listaFormaciones = await Trabajo.find({
       salario: { $exists: false },
-    }).populate("tareas");
+    })
+      .populate("tareas")
+      .sort([["nivel_minimo", 1]]);
     return listaFormaciones;
   } catch (err) {
     debug(chalk.redBright.bold("No se han podido listar las formaciones"));
